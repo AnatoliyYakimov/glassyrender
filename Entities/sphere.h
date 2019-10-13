@@ -8,7 +8,7 @@
 #include <utility>
 #include "vec.h"
 
-class Sphere {
+class sphere {
 public:
     float R;
     point3f O;
@@ -27,6 +27,10 @@ public:
         float x1 = (sqrt - k2) / (k1);
         float x2 = (-sqrt - k2) / (k1);
         return std::pair{x1, x2};
+    }
+
+    vec3f norm(const point3f &p) const {
+        return vec3f{O, p}.normalize();
     }
 };
 

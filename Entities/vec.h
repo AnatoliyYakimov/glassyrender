@@ -124,7 +124,7 @@ float operator*(const VEC &lhs, const VEC &rhs) {
 template<size_t dim, typename number_t>
 VEC operator*(VEC lhs, float a) {
     for (size_t i = dim; i--;) {
-        lhs[i] * a;
+        lhs[i] *= a;
     }
     return lhs;
 }
@@ -132,7 +132,7 @@ VEC operator*(VEC lhs, float a) {
 template<size_t dim, typename number_t>
 VEC operator*(float a, VEC rhs) {
     for (size_t i = dim; i--;) {
-        rhs[i] * a;
+        rhs[i] *= a;
     }
     return rhs;
 }

@@ -16,9 +16,8 @@
  */
 template<size_t dim, typename number_t>
 class point {
-private:
-    number_t coords[dim];
 public:
+    number_t coords[dim];
     point() = default;
     point(const POINT &p);
     explicit point(std::initializer_list<number_t> values);
@@ -52,7 +51,7 @@ public:
     }
 };
 
-typedef point<3, unsigned char> color;
+typedef point<3, float> color;
 typedef point<3, float> point3f;
 typedef point<2, float> point2f;
 typedef point<2, int> point2i;
@@ -71,7 +70,7 @@ point<dim, number_t>::~point() {
 template<size_t dim, typename number_t>
 POINT operator*(POINT lhs, float a) {
     for (size_t i = dim; i--;) {
-        lhs[i] * a;
+        lhs[i] *= a;
     }
     return lhs;
 }
@@ -79,7 +78,7 @@ POINT operator*(POINT lhs, float a) {
 template<size_t dim, typename number_t>
 POINT operator*(float a, POINT rhs) {
     for (size_t i = dim; i--;) {
-        rhs[i] * a;
+        rhs[i] *= a;
     }
     return rhs;
 }

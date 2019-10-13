@@ -21,24 +21,29 @@ PAINTSTRUCT ps;
 HANDLE hOld;
 
 
-
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
                    LPSTR lpCmdLine, int nCmdShow) {
     if (!register_window(hInstance, CLASS_NAME, &WndProc)) {
         return 1;
     }
     HWND hWnd = create_window(hInstance, CLASS_NAME, WINDOW_NAME);
-    auto spheres = std::vector<Sphere>();
-    spheres.push_back({6,
+    auto spheres = std::vector<sphere>();
+    spheres.push_back({8,
                        point3f{-20, 1, 50},
-                       color{0, 0, 255}});
+                       color{200, 200, 20}});
     spheres.push_back({6,
                        point3f{20, 0, 50},
-                       color{100, 0, 100}});
+                       color{50, 10, 255}});
     spheres.push_back({79.81,
                        point3f{0, 79.8f, 60},
-                       color{255, 0, 255}});
+                       color{10, 200, 255}});
     scene.model.setSpheres(spheres);
+
+    auto lights = ARRAY_LIST<i_light_source *>();
+    lights.push_back(new ambient_light_source{0.2f});
+    lights.push_back(new point_light_source{0.8f, point3f{0,50,100}});
+    lights.push_back(new ambient_light_source{0.2f});
+    scene.model.setLights(lights);
     ShowWindow(hWnd, nCmdShow);
     UpdateWindow(hWnd);
     MSG msg;

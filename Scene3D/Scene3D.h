@@ -9,17 +9,17 @@
 #include <vector>
 #include <windows.h>
 #include "viewport.h"
-#include "Model.h"
+#include "model.h"
 
 class Scene3D {
 public:
-    Model model;
+    model model;
     viewport canvas;
     Scene3D(int, int);
     void clear(HDC);
     void render_scene(HDC);
 private:
-    const color* trace_ray(const vec3f& V);
+    const COLORREF trace_ray(const vec3f& V);
     constexpr static COLORREF SCENE_COLOR = RGB(255, 255, 255);
 };
 
@@ -33,32 +33,44 @@ void Scene3D::clear(HDC dc) {
     Rectangle(dc, 0, 0, r.right, r.bottom);
 }
 
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "hicpp-signed-bitwise"
 void Scene3D::render_scene(HDC dc) {
     const int H = canvas.Height;
     const int W = canvas.Width;
     auto f = canvas.transformer_function();
     for (int u = 0; u < W; u++) {
         for (int v = 0; v < H; v++) {
-            auto *col = trace_ray(f(u, v));
-
-            COLORREF colorRef = col ? RGB((*col)[0], (*col)[1], (*col)[2]) : SCENE_COLOR;
-            SetPixel(dc, u, v, colorRef);
+            auto col = trace_ray(f(u, v));
+            SetPixel(dc, u, v, col);
         }
     }
 }
-#pragma clang diagnostic pop
 
-const color* Scene3D::trace_ray(const vec3f& V) {
+
+const COLORREF Scene3D::trace_ray(const vec3f& V) {
     auto spheres = model.getSpheres();
+    ARRAY_LIST<std::pair<float, const sphere&>> points;
     for (const auto & sphere : spheres) {
         auto [t1, t2] = sphere.ray_collision(canvas.O, V);
         if (t1 >= 1 || t2 >= 1) {
-            return &sphere.col;
+            points.push_back(std::pair{std::min(t1, t2), sphere});
         }
     }
-    return nullptr;
+    if (points.empty()){
+        return SCENE_COLOR;
+    }
+    auto pair = std::min_element(points.begin(), points.end(), [](std::pair<float, const sphere&> &p1, std::pair<float, const sphere&> &p2) {
+        if (p1.first > p2.first) return 1;
+        else return -1;
+    }).base();
+    auto v = pair->first * V;
+    const point3f & p = point3f{v[0], v[1], v[2]};
+    float intensity = 0;
+    for(const auto & light : model.getLights()) {
+        intensity += light->count_impact(pair->second, p);
+    }
+    intensity = intensity > 1.0f ? 1.0f : intensity;
+    auto col = intensity * pair->second.col;
+    return RGB((int)col[0], (int)col[1], (int)col[2]);
 }
 
 
