@@ -40,9 +40,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
     scene.model.setSpheres(spheres);
 
     auto lights = ARRAY_LIST<i_light_source *>();
-    lights.push_back(new ambient_light_source{0.2f});
-    lights.push_back(new point_light_source{0.8f, point3f{0,50,100}});
-    lights.push_back(new ambient_light_source{0.2f});
+    lights.push_back(new ambient_light_source{0.001f});
+    lights.push_back(new point_light_source{0.0f, point3f{100,100,100}});
+    lights.push_back(new vector_light_source{0.4f, vec3f{0, 0, -1}});
     scene.model.setLights(lights);
     ShowWindow(hWnd, nCmdShow);
     UpdateWindow(hWnd);

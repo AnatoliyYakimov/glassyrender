@@ -19,7 +19,7 @@ public:
     void clear(HDC);
     void render_scene(HDC);
 private:
-    const COLORREF trace_ray(const vec3f& V);
+    COLORREF trace_ray(const vec3f& V);
     constexpr static COLORREF SCENE_COLOR = RGB(255, 255, 255);
 };
 
@@ -46,13 +46,23 @@ void Scene3D::render_scene(HDC dc) {
 }
 
 
-const COLORREF Scene3D::trace_ray(const vec3f& V) {
+COLORREF Scene3D::trace_ray(const vec3f& V) {
     auto spheres = model.getSpheres();
     ARRAY_LIST<std::pair<float, const sphere&>> points;
     for (const auto & sphere : spheres) {
         auto [t1, t2] = sphere.ray_collision(canvas.O, V);
-        if (t1 >= 1 || t2 >= 1) {
-            points.push_back(std::pair{std::min(t1, t2), sphere});
+        if (t1 > 1 || t2 > 1) {
+            float min = 0;
+            if (t1 > 1) {
+                if (t2 > 1) {
+                    min = t1 < t2 ? t1 : t2;
+                } else {
+                    min = t1;
+                }
+            } else {
+                min = t2;
+            }
+            points.emplace_back(min, sphere);
         }
     }
     if (points.empty()){
