@@ -17,6 +17,9 @@ public:
     virtual float count_impact(const sphere& S, const point3f &p) const = 0;
 };
 
+/**
+ * Базовый свет окружения, безусловно влияет на каждую точку в пространстве
+ */
 class ambient_light_source : public i_light_source {
 public:
     ambient_light_source() = default;
@@ -28,6 +31,9 @@ public:
 
 };
 
+/**
+ * Источник света, находящийся в определённой точке мирового пространства.
+ */
 class point_light_source : public i_light_source {
 private:
     point3f L;
@@ -41,6 +47,9 @@ public:
     }
 };
 
+/**
+ * Бесконечноудалённый от сцены источник света, представляется в виде вектора.
+ */
 class vector_line_source : public i_light_source {
 private:
     vec3f L;
