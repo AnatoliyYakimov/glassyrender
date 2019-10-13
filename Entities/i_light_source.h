@@ -50,11 +50,11 @@ public:
 /**
  * Бесконечноудалённый от сцены источник света, представляется в виде вектора.
  */
-class vector_line_source : public i_light_source {
+class vector_light_source : public i_light_source {
 private:
     vec3f L;
 public:
-    explicit vector_line_source(float i, const vec3f &l) : i_light_source(i), L(l) {}
+    explicit vector_light_source(float i, const vec3f &l) : i_light_source(i), L(l) {}
 
     float count_impact(const sphere &S, const point3f &p) const override {
         return intensity * L * S.norm(p);
