@@ -18,6 +18,7 @@ public:
     Scene3D(int, int);
     void clear(HDC);
     void render_scene(HDC);
+    std::pair<const sphere*, const point3f*>* nearest_collision(const vec3f &V);
 private:
     COLORREF trace_ray(const vec3f& V);
     constexpr static COLORREF SCENE_COLOR = RGB(255, 255, 255);
@@ -47,9 +48,25 @@ void Scene3D::render_scene(HDC dc) {
 
 
 COLORREF Scene3D::trace_ray(const vec3f& V) {
+    auto nearest = nearest_collision(V);
+    if (!nearest) {
+        delete nearest;
+        return SCENE_COLOR;
+    }
+    auto [sphere, collision_point] = *nearest;
+    float intensity = 0;
+    for(const auto & light : model.getLights()) {
+        intensity += light->count_impact(*sphere, *collision_point);
+    }
+    intensity = intensity > 1.0f ? 1.0f : intensity;
+    delete nearest;
+    return get_color_ref(intensity * sphere->col);
+}
+
+std::pair<const sphere *, const point3f *>* Scene3D::nearest_collision(const vec3f &V) {
     auto spheres = model.getSpheres();
     ARRAY_LIST<std::pair<float, const sphere&>> points;
-    for (const auto & sphere : spheres) {
+    for (const auto &sphere : spheres) {
         auto [t1, t2] = sphere.ray_collision(canvas.O, V);
         if (t1 > 1 || t2 > 1) {
             float min = 0;
@@ -66,21 +83,17 @@ COLORREF Scene3D::trace_ray(const vec3f& V) {
         }
     }
     if (points.empty()){
-        return SCENE_COLOR;
+        return nullptr;
     }
-    auto pair = std::min_element(points.begin(), points.end(), [](std::pair<float, const sphere&> &p1, std::pair<float, const sphere&> &p2) {
-        if (p1.first > p2.first) return 1;
-        else return -1;
-    }).base();
-    auto v = pair->first * V;
-    const point3f & p = point3f{v[0], v[1], v[2]};
-    float intensity = 0;
-    for(const auto & light : model.getLights()) {
-        intensity += light->count_impact(pair->second, p);
+    const std::pair<float, const sphere&>* nearest = points.begin().base();
+    for (const auto &item : points) {
+        if (item.first < nearest->first) {
+            nearest = &item;
+        }
     }
-    intensity = intensity > 1.0f ? 1.0f : intensity;
-    auto col = intensity * pair->second.col;
-    return RGB((int)col[0], (int)col[1], (int)col[2]);
+    const point3f &p = (nearest->first * V).to_point();
+    const sphere &s = nearest->second;
+    return new std::pair<const sphere *, const point3f *>(&s, &p);
 }
 
 

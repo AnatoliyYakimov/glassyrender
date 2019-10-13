@@ -19,21 +19,23 @@
 template<size_t dim, typename number_t>
 class vec {
 public:
+    number_t coords[dim];
+
     vec() = default;
 
     vec(const VEC &v);
 
-    explicit vec(const POINT &p1, const POINT &p2);
+    explicit vec(const point<dim,number_t> &p1, const point<dim,number_t> &p2);
 
     vec(std::initializer_list<number_t> values);
 
     ~vec();
 
-    number_t coords[dim];
-
     [[nodiscard]] float norm() const;
 
     [[nodiscard]] VEC normalize() const;
+
+    [[nodiscard]] point<dim, number_t> to_point() const;
 
     /**
      * Скалярное произведение векторов.
@@ -124,7 +126,7 @@ float operator*(const VEC &lhs, const VEC &rhs) {
 template<size_t dim, typename number_t>
 VEC operator*(VEC lhs, float a) {
     for (size_t i = dim; i--;) {
-        lhs[i] *= a;
+        lhs[i] = static_cast<number_t>(lhs[i] * a);
     }
     return lhs;
 }
@@ -132,7 +134,7 @@ VEC operator*(VEC lhs, float a) {
 template<size_t dim, typename number_t>
 VEC operator*(float a, VEC rhs) {
     for (size_t i = dim; i--;) {
-        rhs[i] *= a;
+        rhs[i] = static_cast<number_t>(rhs[i] * a);
     }
     return rhs;
 }
@@ -156,7 +158,7 @@ VEC operator-(VEC lhs, const VEC &rhs) {
 template<size_t dim, typename number_t>
 VEC operator/(VEC lhs, float a) {
     for (size_t i = dim; i--;) {
-        lhs[i] /= a;
+        lhs[i] = static_cast<number_t>(lhs[i] / a);
     }
     return lhs;
 }
@@ -172,6 +174,11 @@ vec<dim, number_t>::vec(std::initializer_list<number_t> values) {
     for (size_t i = dim; i--;) {
         this->coords[i] = *(--it);
     }
+}
+
+template<size_t dim, typename number_t>
+point<dim, number_t> vec<dim, number_t>::to_point() const {
+    return point3f{coords[0], coords[1], coords[2]};
 }
 
 

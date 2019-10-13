@@ -5,9 +5,9 @@
 #ifndef GLASSYRENDER_POINT_H
 #define GLASSYRENDER_POINT_H
 
-#include <ostream>
+#include <windef.h>
+#include <wingdi.h>
 
-#define POINT point<dim,number_t>
 
 /**
  * Точка в dim-мерном пространстве
@@ -19,7 +19,7 @@ class point {
 public:
     number_t coords[dim];
     point() = default;
-    point(const POINT &p);
+    point(const point<dim,number_t> &p);
     explicit point(std::initializer_list<number_t> values);
     ~point();
 
@@ -33,8 +33,10 @@ public:
     template <size_t N, typename num_t>
     friend point<N , num_t> operator/(point<N , num_t> lhs, float a);
 
+    friend inline COLORREF get_color_ref(const point<3, BYTE> &col);
 
-    bool operator==(const POINT &rhs) const {
+
+    bool operator==(const point<dim,number_t> &rhs) const {
         bool equals = true;
         for (size_t i = dim; i-- && equals;) {
             equals = rhs.coords[i] == this->coords[i];
@@ -51,13 +53,13 @@ public:
     }
 };
 
-typedef point<3, float> color;
+typedef point<3, BYTE> color;
 typedef point<3, float> point3f;
 typedef point<2, float> point2f;
 typedef point<2, int> point2i;
 
 template<size_t dim, typename number_t>
-POINT::point(const POINT &p) {
+point<dim,number_t>::point(const point<dim,number_t> &p) {
     for (size_t i = dim; i--;) {
         this->coords[i] = p[i];
     }
@@ -68,23 +70,23 @@ point<dim, number_t>::~point() {
 }
 
 template<size_t dim, typename number_t>
-POINT operator*(POINT lhs, float a) {
+point<dim,number_t> operator*(point<dim,number_t> lhs, float a) {
     for (size_t i = dim; i--;) {
-        lhs[i] *= a;
+        lhs[i] = static_cast<number_t>(lhs[i] * a);
     }
     return lhs;
 }
 
 template<size_t dim, typename number_t>
-POINT operator*(float a, POINT rhs) {
+point<dim,number_t> operator*(float a, point<dim,number_t> rhs) {
     for (size_t i = dim; i--;) {
-        rhs[i] *= a;
+        rhs[i] = static_cast<number_t>(rhs[i] * a);
     }
     return rhs;
 }
 
 template<size_t dim, typename number_t>
-POINT operator+(POINT lhs, const POINT &rhs) {
+point<dim,number_t> operator+(point<dim,number_t> lhs, const point<dim,number_t> &rhs) {
     for (size_t i = dim; i--;) {
         lhs[i] += rhs[i];
     }
@@ -92,7 +94,7 @@ POINT operator+(POINT lhs, const POINT &rhs) {
 }
 
 template<size_t dim, typename number_t>
-POINT operator-(POINT lhs, const POINT &rhs) {
+point<dim,number_t> operator-(point<dim,number_t> lhs, const point<dim,number_t> &rhs) {
     for (size_t i = dim; i--;) {
         lhs[i] -= rhs[i];
     }
@@ -100,9 +102,9 @@ POINT operator-(POINT lhs, const POINT &rhs) {
 }
 
 template<size_t dim, typename number_t>
-POINT operator/(POINT lhs, const float a) {
+point<dim,number_t> operator/(point<dim,number_t> lhs, const float a) {
     for (size_t i = dim; i--;) {
-        lhs[i] /= a;
+        lhs[i] = static_cast<number_t>(lhs[i] / a);
     }
     return lhs;
 }
@@ -113,6 +115,10 @@ point<dim, number_t>::point(std::initializer_list<number_t> values) {
     for (size_t i = dim; i--;) {
         this->coords[i] = *(--it);
     }
+}
+
+inline COLORREF get_color_ref(const point<3, BYTE>& col) {
+    return RGB(col[0], col[1], col[2]);
 }
 
 #endif //GLASSYRENDER_POINT_H
