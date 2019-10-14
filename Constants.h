@@ -10,5 +10,7 @@
 #define HEIGHT 600
 #define WIDTH 800
 #define ARRAY_LIST std::vector
+#define inf std::numeric_limits<float>::infinity()
+#define eps 0.001f
 
 #endif //GLASSYRENDER_CONSTANTS_H

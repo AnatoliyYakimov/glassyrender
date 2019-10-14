@@ -1,9 +1,10 @@
 
 #include <windows.h>
 #include <vector>
+#include <iostream>
 
 #include "Constants.h"
-#include "Scene3D/Scene3D.h"
+#include "Scene3D/scene3d.h"
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -13,7 +14,7 @@ HWND create_window(HINSTANCE hInstance, LPCSTR className, LPCSTR windowName);
 
 LPCSTR CLASS_NAME = "MineWindow";
 LPCSTR WINDOW_NAME = "Glassy Render";
-static Scene3D scene = Scene3D(WIDTH, HEIGHT); // NOLINT(cert-err58-cpp)
+static scene3d scene = scene3d(WIDTH, HEIGHT); // NOLINT(cert-err58-cpp)
 
 HDC dc, memDC;
 HBITMAP memBitmap;
@@ -40,9 +41,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
     scene.model.setSpheres(spheres);
 
     auto lights = ARRAY_LIST<i_light_source *>();
-    lights.push_back(new ambient_light_source{0.001f});
-    lights.push_back(new point_light_source{0.0f, point3f{100,100,100}});
-    lights.push_back(new vector_light_source{0.4f, vec3f{0, 0, -1}});
+    lights.push_back(new ambient_light_source{0.0f});
+    lights.push_back(new point_light_source{0.8f, point3f{0,-10,0}});
+    lights.push_back(new vector_light_source{0.0f, vec3f{0, 0, -1}});
     scene.model.setLights(lights);
     ShowWindow(hWnd, nCmdShow);
     UpdateWindow(hWnd);

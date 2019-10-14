@@ -34,7 +34,6 @@ auto viewport::transformer_function() {
                         (static_cast<float>(u) - t.Ow[0])/Ow[0],
                         (static_cast<float>(v) - t.Ow[1])/Ow[0],
                         1.4f
-
                 });
     };
 }
