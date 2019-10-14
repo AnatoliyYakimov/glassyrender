@@ -57,9 +57,10 @@ public:
         if (collision) {
             res = 0.0f;
         } else {
-            LP = LP.normalize();
+            float norm = LP.norm();
+            norm *= norm;
             vec3f N = S.norm(p);
-            res = intensity * LP * N;
+            res = intensity * LP * N / norm;
         }
         delete collision;
         return res > 0 ? res : 0;
@@ -82,7 +83,7 @@ public:
             res = 0.0f;
         } else {
             vec3f N = S.norm(p);
-            res = intensity * L * N;;
+            res = intensity * L * N;
         }
         delete collision;
         return res > 0 ? res : 0;

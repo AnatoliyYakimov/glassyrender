@@ -13,13 +13,13 @@ class viewport {
 public:
     point3f O;
     point3f Ow;
-    float d = 1;
+    float d = 1.4;
     float Px;
     float Py;
     int Height;
     int Width;
 
-    viewport(int, int);
+    viewport(int, int, float);
 
     void recompute_size(int, int);
 
@@ -28,31 +28,29 @@ public:
 
 auto viewport::transformer_function() {
     return [this](int u, int v) -> vec3f {
-        auto &t = *this;
         return
                 vec3f(O, point3f{
-                        (static_cast<float>(u) - t.Ow[0])/Ow[0],
-                        (static_cast<float>(v) - t.Ow[1])/Ow[0],
-                        1.4f
+                        (static_cast<float>(u) - Ow[0])/Ow[0],
+                        -(static_cast<float>(v) - Ow[1])/Ow[0],
+                        d
                 });
     };
 }
 
-viewport::viewport(const int W, const int H)
+viewport::viewport(const int W, const int H, const float d)
         : Height(H),
           Width(W),
           O(point3f{0, 0, 0}),
           Ow(point3f{
                   static_cast<float>(W) * 0.5f,
                   static_cast<float>(H) * 0.5f,
-                  200.0f
+                  d
           }),
-          d(Ow[2] - O[2]),
-          Px(10),
-          Py(10) {
-}
+          d(d){}
 
-void viewport::recompute_size(int W, int H) {
+void viewport::recompute_size(int H, int W) {
+    Height = H;
+    Width = W;
     Ow[0] = static_cast<float>(W) * 0.5f;
     Ow[1] = static_cast<float>(H) * 0.5f;
 }

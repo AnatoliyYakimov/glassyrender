@@ -16,7 +16,7 @@ class scene3d {
 public:
     model model;
     viewport viewport;
-    scene3d(int, int);
+    scene3d(int, int, float);
     void clear(HDC);
     void render_scene(HDC);
 private:
@@ -24,7 +24,7 @@ private:
     constexpr static COLORREF SCENE_COLOR = RGB(255, 255, 255);
 };
 
-scene3d::scene3d(int W, int H) : model(), viewport(W, H) {
+scene3d::scene3d(int W, int H, float d) : model(), viewport(W, H, d) {
 
 }
 
