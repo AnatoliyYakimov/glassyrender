@@ -5,6 +5,8 @@
 
 #include "Constants.h"
 #include "Scene3D/scene3d.h"
+#include "Entities/matrix.h"
+
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -27,6 +29,8 @@ RECT *rect;
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
                    LPSTR lpCmdLine, int nCmdShow) {
+
+
     if (!register_window(hInstance, CLASS_NAME, &WndProc)) {
         return 1;
     }
