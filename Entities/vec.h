@@ -80,8 +80,8 @@ public:
     }
 
     friend std::ostream &operator<<(std::ostream &os, const vec &vec) {
-        for (size_t i = dim; i--;) {
-            os << vec.coords[i];
+        for (size_t i = 0; i < dim; i++) {
+            os << vec.coords[i] << " ";
         }
         return os;
     }
