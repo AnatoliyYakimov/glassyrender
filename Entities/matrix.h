@@ -11,7 +11,6 @@
 #include "vec.h"
 
 
-
 /**
  * Класс матриц.
  * @tparam row_size - Rows (число строк)
@@ -23,12 +22,13 @@ class matrix {
 protected:
     vec<col_size, number_t> rows[row_size];
 public:
-
     matrix() = default;
 
     matrix(std::initializer_list<vec<col_size, number_t>> initializer_list);
 
     matrix(std::initializer_list<number_t> initializer_list);
+
+    static matrix<row_size, col_size, number_t> identity();
 
     vec<row_size, number_t> column(size_t idx) const;
 
@@ -45,22 +45,39 @@ public:
 
     matrix<row_size, col_size, number_t> union_matrix() const;
 
-    const ROW &operator[](size_t idx) const {
+    const vec<col_size, number_t> &operator[](size_t idx) const {
         assert(idx < row_size);
         return rows[idx];
     }
 
-    ROW &operator[](size_t idx) {
+    vec<col_size, number_t> &operator[](size_t idx) {
         assert(idx < row_size);
         return rows[idx];
     }
 
     template<size_t N, size_t M, size_t K, typename num>
     friend inline matrix<N, M, num> operator*(const matrix<N, K, num> &lhs, const matrix<K, M, num> &rhs);
+
     template<size_t N, size_t M, typename num>
     friend inline matrix<N, M, num> operator*(const matrix<N, M, num> &lhs, num a);
+
+    template<size_t N, size_t M, typename num>
+    friend inline matrix<N, M, num> operator*(num a, const matrix<N, M, num> &rhs);
+
+    template<size_t N, size_t M, typename num>
+    friend inline vec<N, num> operator*(const matrix<N, M, num> &lhs, const vec<M, num> &rhs);
+
+    template<size_t N, size_t M, typename num>
+    friend inline point<N, num> operator*(const matrix<N, M, num> &lhs, const point<M, num> &rhs);
+
     template<size_t N, size_t M, typename num>
     friend inline matrix<N, M, num> operator/(const matrix<N, M, num> &lhs, num a);
+
+    template<typename num>
+    friend inline vec<3, num> operator*(const matrix<4, 4, num> &mat, const vec<3, num> &v);
+
+    template<typename num>
+    friend inline point<3, num> operator*(const matrix<4, 4, num> &mat, const point<3, num> &p);
 
     friend std::ostream &operator<<(std::ostream &os, const matrix &matrix) {
         for (size_t i = 0; i < row_size; i++) {
@@ -76,7 +93,7 @@ public:
     static number_t det(const matrix<dim, dim, number_t> &mat) {
         number_t ret = 0;
         for (size_t i = dim; i--;) {
-            ret += mat[0][i] + mat.get_cofactor(0, i);
+            ret += mat[0][i] * mat.get_cofactor(0, i);
         }
         return ret;
     }
@@ -86,7 +103,7 @@ template<typename number_t>
 class dt<1, number_t> {
 public:
     static number_t det(const matrix<1, 1, number_t> &mat) {
-            return mat[0][0];
+        return mat[0][0];
     }
 };
 
@@ -106,7 +123,7 @@ template<size_t row_size, size_t col_size, typename number_t>
 matrix<row_size, col_size, number_t>::matrix(std::initializer_list<vec<col_size, number_t>> initializer_list) {
     auto it = initializer_list.end();
     for (size_t i = row_size; i--;) {
-        rows[i] = *(--it);
+        rows[i] = vec<col_size, number_t>(*(--it));
     }
 }
 
@@ -144,7 +161,8 @@ number_t matrix<row_size, col_size, number_t>::determinant() const {
 }
 
 template<size_t row_size, size_t col_size, typename number_t>
-matrix<row_size - 1, col_size - 1, number_t> matrix<row_size, col_size, number_t>::get_minor(size_t row, size_t col) const {
+matrix<row_size - 1, col_size - 1, number_t>
+matrix<row_size, col_size, number_t>::get_minor(size_t row, size_t col) const {
     static_assert(row_size == col_size);
 
     matrix<row_size - 1, col_size - 1, number_t> res;
@@ -198,16 +216,59 @@ template<size_t N, size_t M, typename num>
 matrix<N, M, num> operator*(const matrix<N, M, num> &lhs, num a) {
     matrix<N, M, num> res;
     for (size_t i = N; i--;) {
-        res = lhs[i] * a;
+        res[i] = lhs[i] * a;
     }
     return res;
 }
+
+template<size_t N, size_t M, typename num>
+matrix<N, M, num> operator*(num a, const matrix<N, M, num> & rhs) {
+    return rhs * a;
+}
+
 
 template<size_t N, size_t M, typename num>
 matrix<N, M, num> operator/(const matrix<N, M, num> &lhs, num a) {
     matrix<N, M, num> res;
     for (size_t i = N; i--;) {
         res[i] = lhs[i] / a;
+    }
+    return res;
+}
+
+template<size_t N, size_t M, typename num>
+vec<N, num> operator*(const matrix<N, M, num> &lhs, const vec<M, num> &rhs) {
+    vec<N, num> res;
+    for (size_t i = N; i--;) {
+        res[i] = lhs[i] * rhs;
+    }
+    return res;
+}
+
+template<size_t N, size_t M, typename num>
+point<N, num> operator*(const matrix<N, M, num> &lhs, const point<M, num> &rhs) {
+    return lhs * vec<N, num>(rhs);
+}
+
+template<typename num>
+vec<3, num> operator*(const matrix<4, 4, num> &mat, const vec<3, num> &v) {
+    vec<4 , num> res = v.extend(1);
+    res = mat * res;
+    return res.shrink() / res[3];
+}
+
+template<typename num>
+point<3, num> operator*(const matrix<4, 4, num> &mat, const point<3, num> &p) {
+    return (mat * vec<3, num>(p)).to_point();
+}
+
+template<size_t row_size, size_t col_size, typename number_t>
+matrix<row_size, col_size, number_t> matrix<row_size, col_size, number_t>::identity() {
+    matrix<row_size, col_size, number_t> res;
+    for (size_t i = row_size; i--;) {
+        for (size_t j = col_size; j--;) {
+            res[i][j] = (i == j);
+        }
     }
     return res;
 }

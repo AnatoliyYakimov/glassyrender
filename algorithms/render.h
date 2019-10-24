@@ -36,7 +36,7 @@ inline std::pair<const sphere *, const point3f *> *nearest_collision(
             nearest = &item;
         }
     }
-    const point3f &p = (nearest->first * V).to_point();
+    const point3f &p = fromPoint + (nearest->first * V).to_point();
     const sphere &s = nearest->second;
     return new std::pair<const sphere *, const point3f *>(&s, &p);
 }

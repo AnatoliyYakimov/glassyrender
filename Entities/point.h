@@ -7,6 +7,7 @@
 
 #include <windef.h>
 #include <wingdi.h>
+#include <ostream>
 
 
 /**
@@ -20,9 +21,11 @@ public:
     number_t coords[dim];
     point() = default;
     point(const point<dim,number_t> &p);
-    explicit point(std::initializer_list<number_t> values);
+    point(std::initializer_list<number_t> values);
     ~point();
 
+    point<dim + 1, number_t> extend() const;
+    point<dim - 1, number_t> shrink() const;
 
     template <size_t N, typename num_t>
     friend point<N , num_t> operator-(point<N , num_t> lhs, const point<N , num_t> &rhs);
@@ -51,10 +54,22 @@ public:
     number_t &operator[](const size_t idx) {
         return this->coords[idx];
     }
+
+    template<size_t N, typename num>
+    friend std::ostream &operator<<(std::ostream &os, const point &point);
 };
 
 typedef point<3, BYTE> color;
 typedef point<3, float> point3f;
+
+template<size_t N, typename num>
+std::ostream &operator<<(std::ostream &os, const point<N, num> &point) {
+    for (size_t i = N; i--;) {
+        os << point[i] << " ";
+    }
+    return os;
+}
+
 typedef point<2, float> point2f;
 typedef point<2, int> point2i;
 
@@ -119,6 +134,26 @@ point<dim, number_t>::point(std::initializer_list<number_t> values) {
 
 inline COLORREF get_color_ref(const point<3, BYTE>& col) {
     return RGB(col[0], col[1], col[2]);
+}
+
+template<size_t dim, typename number_t>
+point<dim - 1, number_t> point<dim, number_t>::shrink() const {
+    point<dim - 1, number_t> res;
+    const number_t last = coords[dim - 1];
+    for (size_t i = dim - 1; i--;) {
+        res[i] = coords[i] / last;
+    }
+    return res;
+}
+
+template<size_t dim, typename number_t>
+point<dim + 1, number_t> point<dim, number_t>::extend() const {
+    point<dim + 1, number_t> res;
+    for (size_t i = dim; i--;) {
+        res[i] = coords[i];
+    }
+    res[dim] = 1;
+    return res;
 }
 
 #endif //GLASSYRENDER_POINT_H

@@ -19,13 +19,16 @@
 template<size_t dim, typename number_t>
 class vec {
 public:
+
     number_t coords[dim];
 
     vec() = default;
 
-    vec(const VEC &v);
+    explicit vec(const VEC &v);
 
-    explicit vec(const point<dim,number_t> &p1, const point<dim,number_t> &p2);
+    explicit vec(const point<dim, number_t> &p);
+
+    explicit vec(const point<dim, number_t> &p1, const point<dim, number_t> &p2);
 
     vec(std::initializer_list<number_t> values);
 
@@ -36,6 +39,10 @@ public:
     [[nodiscard]] VEC normalize() const;
 
     [[nodiscard]] point<dim, number_t> to_point() const;
+
+    vec<dim + 1, number_t> extend(number_t value) const;
+
+    vec<dim - 1, number_t> shrink() const;
 
     /**
      * Скалярное произведение векторов.
@@ -87,13 +94,14 @@ public:
     }
 };
 
+typedef vec<4, float> vec4f;
 typedef vec<3, float> vec3f;
 typedef vec<2, size_t> vec2i;
 
 template<size_t dim, typename number_t>
 VEC::vec(const VEC &v) {
     for (size_t i = dim; i--;) {
-        (*this)[i] = v[i];
+        (*this)[i] = v.coords[i];
     }
 }
 
@@ -180,6 +188,35 @@ template<size_t dim, typename number_t>
 point<dim, number_t> vec<dim, number_t>::to_point() const {
     return point3f{coords[0], coords[1], coords[2]};
 }
+
+template<size_t dim, typename number_t>
+vec<dim - 1, number_t> vec<dim, number_t>::shrink() const {
+    vec<dim - 1, number_t> res;
+    const number_t last = coords[dim - 1];
+    for (size_t i = dim - 1; i--;) {
+        res[i] = coords[i];
+    }
+    return res;
+}
+
+template<size_t dim, typename number_t>
+vec<dim + 1, number_t> vec<dim, number_t>::extend(number_t value) const {
+    vec<dim + 1, number_t> res;
+    for (size_t i = dim; i--;) {
+        res[i] = coords[i];
+    }
+    res[dim] = value;
+    return res;
+}
+
+template<size_t dim, typename number_t>
+vec<dim, number_t>::vec(const point<dim, number_t> &p) {
+    for (size_t i = dim; i--;) {
+        coords[i] = p[i];
+    }
+}
+
+
 
 
 #endif //GLASSYRENDER_VEC_H

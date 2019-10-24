@@ -11,6 +11,7 @@
 #include "viewport.h"
 #include "model.h"
 #include "../algorithms/render.h"
+#include "../Entities/matrix.h"
 
 class scene3d {
 public:
@@ -20,7 +21,7 @@ public:
     void clear(HDC);
     void render_scene(HDC);
 private:
-    COLORREF trace_ray(const vec3f& V);
+    COLORREF trace_ray(const point3f &cam, const vec3f& V);
     constexpr static COLORREF SCENE_COLOR = RGB(255, 255, 255);
 };
 
@@ -35,20 +36,21 @@ void scene3d::clear(HDC dc) {
 }
 
 void scene3d::render_scene(HDC dc) {
-    const int H = viewport.Height;
-    const int W = viewport.Width;
-    auto f = viewport.transformer_function();
+    const int H = viewport.height;
+    const int W = viewport.width;
+    auto cam = viewport.get_camera_pos().to_point();
+    auto f = viewport.screen_to_world_function();
     for (int u = 0; u < W; u++) {
         for (int v = 0; v < H; v++) {
-            auto col = trace_ray(f(u, v));
+            auto col = trace_ray(cam, f(u, v));
             SetPixel(dc, u, v, col);
         }
     }
 }
 
 
-COLORREF scene3d::trace_ray(const vec3f& V) {
-    auto nearest = nearest_collision(model.getSpheres(), viewport.O, V, 1, inf);
+COLORREF scene3d::trace_ray(const point3f &cam, const vec3f& V) {
+    auto nearest = nearest_collision(model.getSpheres(), cam, V, 1, inf);
     if (!nearest) {
         delete nearest;
         return SCENE_COLOR;
