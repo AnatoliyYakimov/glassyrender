@@ -104,9 +104,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
             InvalidateRect(hWnd, rect, true);
             break;
         }
-        case WM_SIZING: {
-
-        }
         case WM_ERASEBKGND:
             return (LRESULT) 1; // Say we handled it.
         default:
