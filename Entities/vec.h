@@ -24,7 +24,7 @@ public:
 
     vec() = default;
 
-    explicit vec(const VEC &v);
+    vec(const VEC &v);
 
     explicit vec(const point<dim, number_t> &p);
 
