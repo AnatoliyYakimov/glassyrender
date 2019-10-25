@@ -7,7 +7,7 @@
 
 #include <utility>
 #include <vector>
-#include "../Entities/sphere.h"
+#include "../include/entities/sphere.h"
 
 inline std::pair<const sphere *, const point3f *> *nearest_collision(
         const std::vector<sphere> &spheres, const point3f &fromPoint, const vec3f &V,

@@ -3,7 +3,7 @@
 //
 
 #include <algorithm>
-#include "model.h"
+#include "../../include/scene/model.h"
 
 
 const ARRAY_LIST<sphere> &model::getSpheres() const {

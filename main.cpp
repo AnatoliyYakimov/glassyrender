@@ -4,8 +4,8 @@
 #include <iostream>
 
 #include "Constants.h"
-#include "Scene3D/scene3d.h"
-#include "Entities/matrix.h"
+#include "include/scene/scene3d.h"
+#include "include/entities/matrix.h"
 
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);

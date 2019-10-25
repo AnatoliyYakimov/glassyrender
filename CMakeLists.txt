@@ -4,5 +4,5 @@ project(GlassyRender)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(GlassyRender main.cpp Constants.h Scene3D/viewport.h Scene3D/model.cpp Scene3D/model.h Scene3D/scene3d.h Entities/point.h Entities/sphere.h Entities/vec.h Entities/i_light_source.h algorithms/render.h Entities/objects.h Entities/matrix.h Entities/affine_transform.h Entities/vector_utils.h)
+add_executable(GlassyRender main.cpp Constants.h include/scene/viewport.h sources/scene/model.cpp include/scene/model.h include/scene/scene3d.h include/entities/point.h include/entities/sphere.h include/entities/vec.h include/entities/i_light_source.h algorithms/render.h include/entities/objects.h include/entities/matrix.h include/entities/affine_transform.h include/entities/vector_utils.h sources/scene/scene3d.cpp sources/scene/viewport.cpp sources/entities/affine_transform.cpp)
 

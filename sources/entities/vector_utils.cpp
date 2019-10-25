@@ -1,17 +1,9 @@
 //
-// Created by Yakimov on 24.10.2019.
+// Created by Yakimov on 25.10.2019.
 //
-
 #ifndef GLASSYRENDER_VECTOR_UTILS_H
-#define GLASSYRENDER_VECTOR_UTILS_H
-
-#include "matrix.h"
-
-template<typename number_t>
-class vector_utils {
-public:
-    static vec<3, number_t> vector_product(const vec<3, number_t> &v1, const vec<3, number_t> &v2);
-};
+#include "../../include/entities/vector_utils.h"
+#endif
 
 template<typename number_t>
 vec<3, number_t> vector_utils<number_t>::vector_product(const vec<3, number_t> &v1, const vec<3, number_t> &v2) {
@@ -29,4 +21,4 @@ vec<3, number_t> vector_utils<number_t>::vector_product(const vec<3, number_t> &
     res[2] = min3.determinant();
     return res;
 }
-#endif //GLASSYRENDER_VECTOR_UTILS_H
+

@@ -6,7 +6,7 @@
 #define GLASSYRENDER_I_LIGHT_SOURCE_H
 
 #include "sphere.h"
-#include "../algorithms/render.h"
+#include "../../algorithms/render.h"
 
 class i_light_source {
 protected:
