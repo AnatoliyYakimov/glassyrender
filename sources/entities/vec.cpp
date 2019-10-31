@@ -2,6 +2,8 @@
 // Created by Yakimov on 25.10.2019.
 //
 
+#include "../../include/entities/vec.h"
+
 #ifndef GLASSYRENDER_VEC_H
 #include "../../include/entities/vec.h"
 #endif //GLASSYRENDER_VEC_H
@@ -127,5 +129,38 @@ VEC::vec(const point<dim, number_t> &p) {
     for (size_t i = dim; i--;) {
         coords[i] = p[i];
     }
+}
+
+template<size_t dim, typename number_t>
+vec<dim, number_t> vec<dim, number_t>::pow(const float a) const {
+    vec<dim, number_t> res(*this);
+    for (size_t i = dim; i--;) {
+        res[i] = std::pow(res[i], a);
+    }
+    return res;
+}
+
+template<size_t dim, typename number_t>
+vec<dim, number_t> operator+(float a, vec<dim, number_t> rhs) {
+    for (size_t i = dim; i--;) {
+        rhs[i] += a;
+    }
+    return rhs;
+}
+
+template<size_t dim, typename number_t>
+vec<dim, number_t> operator/(vec<dim, number_t> lhs, const vec<dim, number_t> &rhs) {
+    for (size_t i = dim; i--;) {
+        lhs[i] /= rhs[i];
+    }
+    return lhs;
+}
+
+template<size_t N, typename num_t>
+vec<N, num_t> exp(vec<N, num_t> v) {
+    for (size_t i = N; i--;) {
+        v[i] = std::exp(v[i]);
+    }
+    return v;
 }
 

@@ -15,14 +15,20 @@
 class scene3d {
 public:
     float ambient_light = 0.0f;
+    float gamma = 2.2;
+    float camera_exposure = 1;
     model model;
     viewport viewport;
-    scene3d(int W, int H, float d) : model(), viewport(W, H, d) {};
+    scene3d(int W, int H, float d);
     void clear(HDC);
-    void render_scene(HDC);
+    void draw_scene(HDC);
+    void recompute_size(int H, int W);
 private:
+    std::vector<vec3f> frame_buffer;
+    void apply_tone_mapping(int H, int W);
+    void apply_gamma_correction(int H, int W);
+    void render_scene(int H, int W);
     vec3f trace_ray(const vec3f &fromPoint, const vec3f& V);
-    constexpr static COLORREF SCENE_COLOR = RGB(255, 255, 255);
 };
 
 

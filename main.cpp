@@ -58,7 +58,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
     auto lights = ARRAY_LIST<i_light_source *>();
     lights.push_back(new point_light_source{0.6, {0, 2, 5}});
-    lights.push_back(new point_light_source{2, {-2, 5, 1}});
+    lights.push_back(new point_light_source{7, {-2, 5, 1}});
     lights.push_back(new point_light_source{0.6, {2, 5, 1}});
     lights.push_back(new vector_light_source{0.4f, {5, -1, 0.03}});
     scene.model.lights = lights;
@@ -98,7 +98,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
         case WM_SIZE: {
             auto H = HIWORD(lParam);
             auto W = LOWORD(lParam);
-            scene.viewport.recompute_size(H, W);
+            scene.recompute_size(H, W);
             draw_scene(hWnd, H, W);
             delete rect;
             rect = new tagRECT{0, 0, H, W};
@@ -122,7 +122,7 @@ void draw_scene(HWND hWnd, int H, int W) {
     memDC = CreateCompatibleDC(dc);
     memBitmap = CreateCompatibleBitmap(dc, W, H);
     hOld = SelectObject(memDC, memBitmap);
-    scene.render_scene(memDC);
+    scene.draw_scene(memDC);
     ReleaseDC(hWnd, dc);
 }
 

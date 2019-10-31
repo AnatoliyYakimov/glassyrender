@@ -46,6 +46,11 @@ public:
 
     inline COLORREF get_color_ref();
 
+    vec<dim, number_t> pow(float a) const;
+
+    template<size_t N, typename num_t>
+    friend vec<N, num_t> exp(vec<N, num_t> v);
+
     /**
      * Скалярное произведение векторов.
      * @tparam N - размерность
@@ -61,6 +66,9 @@ public:
     friend VEC operator+(VEC lhs, const VEC &rhs);
 
     template<size_t N, typename num_t>
+    friend VEC operator+(float a, VEC rhs);
+
+    template<size_t N, typename num_t>
     friend VEC operator-(VEC lhs, const VEC &rhs);
 
     template<size_t N, typename num_t>
@@ -71,6 +79,9 @@ public:
 
     template<size_t N, typename num_t>
     friend VEC operator/(VEC lhs, float a);
+
+    template<size_t N, typename num_t>
+    friend VEC operator/(VEC lhs, const VEC& rhs);
 
     bool operator==(const VEC &rhs) const {
         bool equals = true;
