@@ -6,27 +6,46 @@
 #include "../../include/scene/model.h"
 
 
-const ARRAY_LIST<sphere> &model::getSpheres() const {
-    return spheres;
+std::pair<vec3f, const sphere *> *
+model::nearest_collision(const vec3f &fromPoint, const vec3f &V, float t_min, float t_max) {
+    std::vector<std::pair<float, const sphere &>> points;
+    for (const auto &sphere : spheres) {
+        auto[t1, t2] = sphere.ray_collision(fromPoint, V);
+        bool b1 = t1 > t_min && t1 < t_max,
+                b2 = t2 > t_min && t2 < t_max;
+        if (b1 || b2) {
+            float min = 0;
+            if (b1 && b2) {
+                min = t1 < t2 ? t1 : t2;
+            } else {
+                min = b1 ? t1 : t2;
+            }
+            points.emplace_back(min, sphere);
+        }
+    }
+    if (points.empty()) {
+        return nullptr;
+    }
+    const std::pair<float, const sphere &> *nearest = points.begin().base();
+    for (const auto &item : points) {
+        if (item.first < nearest->first) {
+            nearest = &item;
+        }
+    }
+    const vec3f &p = fromPoint + (nearest->first * V);
+    const sphere &s = nearest->second;
+    return new std::pair<vec3f, const sphere *>(p, &s);
 }
 
-void model::setSpheres(const ARRAY_LIST<sphere> &spheres) {
-    model::spheres = spheres;
-// TODO сортировка сфер по близости к камере
-//    std::sort(model::spheres.begin(), model::spheres.end(),
-//            [](const sphere &s1, const sphere &s2) -> int {
-//        if (s1.O)
-//    });
-}
-
-model::model(ARRAY_LIST<sphere> &spheres) : spheres(spheres) {
-}
-
-const std::vector<i_light_source *> &model::getLights() const {
-    return lights;
-}
-
-void model::setLights(const std::vector<i_light_source *> &lights) {
-    model::lights = lights;
+bool model::any_collision(const vec3f &fromPoint, const vec3f &V, float t_min, float t_max) {
+    for (const auto &sphere : spheres) {
+        auto[t1, t2] = sphere.ray_collision(fromPoint, V);
+        bool b1 = t1 > t_min && t1 < t_max,
+                b2 = t2 > t_min && t2 < t_max;
+        if (b1 || b2) {
+            return true;
+        }
+    }
+    return false;
 }
 

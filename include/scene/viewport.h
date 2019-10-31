@@ -38,17 +38,10 @@ public:
 
     void apply(const affine_transform &at);
 
-    [[nodiscard]] vec3f get_camera_pos() const {
-        return camera_pos;
-    }
-
-    auto screen_to_world_function() {
-        return [this](int u, int v) -> vec3f {
+    inline vec3f screen_to_world(const int &u, const int &v) {
             const point2f Pv = camera_to_viewport(u, v);
             const vec3f Pw = origin_pos + Pv[0] * Vx + Pv[1] * Vy;
             return Pw - camera_pos;
-        };
-
     };
 };
 

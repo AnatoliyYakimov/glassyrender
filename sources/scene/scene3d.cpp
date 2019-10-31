@@ -13,29 +13,31 @@ void scene3d::clear(HDC dc) {
 void scene3d::render_scene(HDC dc) {
     const int H = viewport.height;
     const int W = viewport.width;
-    auto cam = viewport.get_camera_pos().to_point();
-    auto f = viewport.screen_to_world_function();
     for (int u = 0; u < W; u++) {
         for (int v = 0; v < H; v++) {
-            auto col = trace_ray(cam, f(u, v));
-            SetPixel(dc, u, v, col);
+            vec3f rgb = trace_ray(viewport.camera_pos, viewport.screen_to_world(u, v));
+            SetPixel(dc, u, v, rgb.get_color_ref());
         }
     }
 }
 
 
-COLORREF scene3d::trace_ray(const point3f &cam, const vec3f& V) {
-    auto nearest = nearest_collision(model.getSpheres(), cam, V, 1, inf);
-    if (!nearest) {
-        delete nearest;
-        return SCENE_COLOR;
+vec3f scene3d::trace_ray(const vec3f &fromPoint, const vec3f &V) {
+    auto nearest = model.nearest_collision(fromPoint, V, 1, inf);
+    if (nearest == nullptr) {
+        return model.scene_color;
     }
-    auto [sphere, collision_point] = *nearest;
-    float intensity = 0;
-    for(const auto & light : model.getLights()) {
-        intensity += light->count_impact(model.getSpheres(), *sphere, *collision_point);
+    auto[collision_point, sphere] = *nearest;
+    float intensity = ambient_light;
+    for (const i_light_source *light : model.lights) {
+        if (!model.any_collision(
+                collision_point, light->direction(collision_point),  eps, inf)) {
+            intensity += light->count_impact(sphere->norm(collision_point), collision_point);
+        }
     }
     intensity = intensity > 1.0f ? 1.0f : intensity;
     delete nearest;
-    return get_color_ref(intensity * sphere->col);
+    vec3f rgb = intensity * sphere->col;
+    return rgb;
 }
+

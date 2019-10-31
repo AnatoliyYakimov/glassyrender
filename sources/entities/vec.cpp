@@ -7,6 +7,11 @@
 #endif //GLASSYRENDER_VEC_H
 
 template<size_t dim, typename number_t>
+inline COLORREF VEC::get_color_ref() {
+    return RGB(255 * coords[0], 255 * coords[1], 255 * coords[2]);
+}
+
+template<size_t dim, typename number_t>
 VEC::vec(const VEC &v) {
     for (size_t i = dim; i--;) {
         (*this)[i] = v.coords[i];

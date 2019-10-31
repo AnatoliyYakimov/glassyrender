@@ -36,38 +36,39 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
         return 1;
     }
     HWND hWnd = create_window(hInstance, CLASS_NAME, WINDOW_NAME);
+    scene.ambient_light = 0.3f;
+
     auto spheres = std::vector<sphere>();
     spheres.push_back({1.5,
-                       point3f{-1.5, 0, 5},
-                       color{200, 200, 20}});
+                       {-1.5, 0, 5},
+                       {0.1, 0.5, 0.8}});
     spheres.push_back({1.5,
-                       point3f{1.5, 0, 5},
-                       color{120, 10, 120}});
+                       {1.5, 0, 5},
+                       {0.5, 0.1, 0.0}});
     spheres.push_back({2,
-                       point3f{4, -1, 0},
-                       color{50, 255, 10}});
+                       {4, -1, 0},
+                       {0.5, 1, 0.5}});
     spheres.push_back({2,
-                       point3f{-4, -1, 0},
-                       color{50, 10, 255}});
+                       {-4, -1, 0},
+                       {0.5, 0.2, 0.1}});
     spheres.push_back({17,
-                       point3f{0, -20, 8},
-                       color{10, 200, 255}});
-    scene.model.setSpheres(spheres);
+                       {0, -20, 8},
+                       {0.2, 0.6, 0.1}});
+    scene.model.spheres = spheres;
 
     auto lights = ARRAY_LIST<i_light_source *>();
-    lights.push_back(new ambient_light_source{0.3f});
-    lights.push_back(new point_light_source{1, point3f{0, 2, 5}});
-    lights.push_back(new point_light_source{1, point3f{-2, 3, 1}});
-    lights.push_back(new point_light_source{1, point3f{2, 3, 1}});
-    lights.push_back(new vector_light_source{0.3f, vec3f{5, -1, 0.03}});
-    scene.model.setLights(lights);
+    lights.push_back(new point_light_source{0.6, {0, 2, 5}});
+    lights.push_back(new point_light_source{2, {-2, 5, 1}});
+    lights.push_back(new point_light_source{0.6, {2, 5, 1}});
+    lights.push_back(new vector_light_source{0.4f, {5, -1, 0.03}});
+    scene.model.lights = lights;
     affine_transform at = {
             1, 0, 0, 0,
             0, 1, 0, -5,
-            0, 0, 1, -60,
+            0, 0, 1, -30,
             0, 0, 0, 1
     };
-//    scene.viewport.apply(at);
+    scene.viewport.apply(at);
     scene.viewport.apply(R3);
     scene.viewport.apply(R2);
     scene.viewport.apply(R);

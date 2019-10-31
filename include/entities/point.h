@@ -36,8 +36,6 @@ public:
     template <size_t N, typename num_t>
     friend point<N , num_t> operator/(point<N , num_t> lhs, float a);
 
-    friend inline COLORREF get_color_ref(const point<3, BYTE> &col);
-
 
     bool operator==(const POINT &rhs) const {
         bool equals = true;

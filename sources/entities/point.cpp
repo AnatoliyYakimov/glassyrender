@@ -76,10 +76,6 @@ point<dim, number_t>::point(std::initializer_list<number_t> values) {
     }
 }
 
-inline COLORREF get_color_ref(const point<3, BYTE>& col) {
-    return RGB(col[0], col[1], col[2]);
-}
-
 template<size_t dim, typename number_t>
 point<dim - 1, number_t> point<dim, number_t>::shrink() const {
     point<dim - 1, number_t> res;

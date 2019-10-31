@@ -11,11 +11,11 @@
 class sphere {
 public:
     float R;
-    point3f O;
-    color col;
+    vec3f O;
+    vec3f col;
 
-    [[nodiscard]] std::pair<float, float> ray_collision(const point3f &camPoint, const vec3f &D) const {
-        vec3f OC = vec3f{O, camPoint};
+    [[nodiscard]] std::pair<float, float> ray_collision(const vec3f &fromPoint, const vec3f &D) const {
+        vec3f OC = fromPoint - O;
         float k1 = 2 * (D * D);
         float k2 = 2 * (D * OC);
         float k3 = (OC * OC) - R * R;
@@ -29,8 +29,8 @@ public:
         return std::pair{x1, x2};
     }
 
-    vec3f norm(const point3f &p) const {
-        return vec3f{O, p}.normalize();
+    vec3f norm(const vec3f &p) const {
+        return (O - p).normalize();
     }
 };
 

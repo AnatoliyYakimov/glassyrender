@@ -12,20 +12,17 @@
 
 class model {
 public:
-    explicit model(ARRAY_LIST<sphere> &spheres);
+    std::vector<sphere> spheres;
+    std::vector<i_light_source *> lights;
+    vec3f scene_color = {1, 1, 1};
+
     model() = default;
 
-    [[nodiscard]] const ARRAY_LIST<sphere> &getSpheres() const;
-
-    void setSpheres(const ARRAY_LIST<sphere> &spheres);
-
-    const std::vector<i_light_source *> &getLights() const;
-
-    void setLights(const std::vector<i_light_source *> &lights);
-
-private:
-    ARRAY_LIST<sphere> spheres;
-    ARRAY_LIST<i_light_source*> lights;
+    std::pair<vec3f, const sphere *> *nearest_collision(
+            const vec3f &fromPoint, const vec3f &V,
+            float t_min, float t_max);
+    bool any_collision(const vec3f &fromPoint, const vec3f &V,
+                       float t_min, float t_max);
 };
 
 

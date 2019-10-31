@@ -44,6 +44,8 @@ public:
 
     vec<dim - 1, number_t> shrink() const;
 
+    inline COLORREF get_color_ref();
+
     /**
      * Скалярное произведение векторов.
      * @tparam N - размерность
@@ -93,6 +95,8 @@ public:
         return os;
     }
 };
+
+
 
 typedef vec<3, float> vec3f;
 
