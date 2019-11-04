@@ -2,7 +2,7 @@
 // Created by Yakimov on 25.10.2019.
 //
 
-#include "../../include/entities/vec.h"
+#include "../../../include/entities/algebra/vec.h"
 
 #ifndef GLASSYRENDER_VEC_H
 #include "../../include/entities/vec.h"
@@ -28,6 +28,13 @@ VEC::vec(const point<dim, number_t> &p1, const point<dim, number_t> &p2) {
 }
 
 template<size_t dim, typename number_t>
+vec<dim, number_t>::vec(const float &val) {
+    for (size_t i = dim; i--;) {
+        coords[i] = val;
+    }
+}
+
+template<size_t dim, typename number_t>
 VEC::~vec() {
 
 }
@@ -49,7 +56,7 @@ float operator*(const VEC &lhs, const VEC &rhs) {
 template<size_t dim, typename number_t>
 VEC operator*(VEC lhs, float a) {
     for (size_t i = dim; i--;) {
-        lhs[i] = static_cast<number_t>(lhs[i] * a);
+        lhs[i] *= a;
     }
     return lhs;
 }
@@ -93,6 +100,7 @@ VEC VEC::normalize() const {
 
 template<size_t dim, typename number_t>
 VEC::vec(std::initializer_list<number_t> values) {
+    assert(values.size() == dim);
     auto it = values.end();
     for (size_t i = dim; i--;) {
         this->coords[i] = *(--it);
@@ -163,4 +171,14 @@ vec<N, num_t> exp(vec<N, num_t> v) {
     }
     return v;
 }
+
+template<size_t dim, typename number_t>
+vec<dim, number_t> vec<dim, number_t>::mix(vec<dim, number_t> v) const {
+    for (size_t i = dim; i--;) {
+        v[i] *= coords[i];
+    }
+    return v;
+}
+
+
 

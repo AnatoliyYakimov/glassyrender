@@ -8,6 +8,7 @@
 #include <ostream>
 #include <cmath>
 #include "point.h"
+#include <cassert>
 
 #define VEC vec<dim,number_t>
 
@@ -30,6 +31,8 @@ public:
 
     explicit vec(const point<dim, number_t> &p1, const point<dim, number_t> &p2);
 
+    explicit vec(const float &val);
+
     vec(std::initializer_list<number_t> values);
 
     ~vec();
@@ -37,6 +40,8 @@ public:
     [[nodiscard]] float norm() const;
 
     [[nodiscard]] VEC normalize() const;
+
+    [[nodiscard]] VEC mix(VEC v) const;
 
     [[nodiscard]] point<dim, number_t> to_point() const;
 
@@ -99,6 +104,10 @@ public:
         return this->coords[idx];
     }
 
+    vec<dim, number_t> operator-() const {
+        return -1.0 * vec<dim, number_t>(*this);
+    }
+
     friend std::ostream &operator<<(std::ostream &os, const vec &vec) {
         for (size_t i = 0; i < dim; i++) {
             os << vec.coords[i] << " ";
@@ -112,6 +121,6 @@ public:
 typedef vec<3, float> vec3f;
 
 
-#include "../../sources/entities/vec.cpp"
+#include "../../../sources/entities/algebra/vec.cpp"
 
 #endif //GLASSYRENDER_VEC_H

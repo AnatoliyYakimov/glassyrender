@@ -6,9 +6,9 @@
 #define GLASSYRENDER_MODEL_H
 
 #include <vector>
-#include "../entities/sphere.h"
+#include "../entities/model_objects/sphere.h"
 #include "../../Constants.h"
-#include "../entities/i_light_source.h"
+#include "../entities/model_objects/i_light_source.h"
 
 class model {
 public:
@@ -20,9 +20,9 @@ public:
 
     std::pair<vec3f, const sphere *> *nearest_collision(
             const vec3f &fromPoint, const vec3f &V,
-            float t_min, float t_max);
+            float t_min, float t_max) const;
     bool any_collision(const vec3f &fromPoint, const vec3f &V,
-                       float t_min, float t_max);
+                       float t_min, float t_max) const;
 };
 
 

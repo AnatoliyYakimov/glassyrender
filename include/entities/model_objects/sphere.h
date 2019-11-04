@@ -6,13 +6,14 @@
 #define GLASSYRENDER_SPHERE_H
 
 #include <utility>
-#include "vec.h"
+#include "../algebra/vec.h"
+#include "material.h"
 
 class sphere {
 public:
     float R;
     vec3f O;
-    vec3f col;
+    material material;
 
     [[nodiscard]] std::pair<float, float> ray_collision(const vec3f &fromPoint, const vec3f &D) const {
         vec3f OC = fromPoint - O;

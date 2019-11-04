@@ -7,7 +7,7 @@
 
 
 std::pair<vec3f, const sphere *> *
-model::nearest_collision(const vec3f &fromPoint, const vec3f &V, float t_min, float t_max) {
+model::nearest_collision(const vec3f &fromPoint, const vec3f &V, float t_min, float t_max) const {
     std::vector<std::pair<float, const sphere &>> points;
     for (const auto &sphere : spheres) {
         auto[t1, t2] = sphere.ray_collision(fromPoint, V);
@@ -37,7 +37,7 @@ model::nearest_collision(const vec3f &fromPoint, const vec3f &V, float t_min, fl
     return new std::pair<vec3f, const sphere *>(p, &s);
 }
 
-bool model::any_collision(const vec3f &fromPoint, const vec3f &V, float t_min, float t_max) {
+bool model::any_collision(const vec3f &fromPoint, const vec3f &V, float t_min, float t_max) const {
     for (const auto &sphere : spheres) {
         auto[t1, t2] = sphere.ray_collision(fromPoint, V);
         bool b1 = t1 > t_min && t1 < t_max,

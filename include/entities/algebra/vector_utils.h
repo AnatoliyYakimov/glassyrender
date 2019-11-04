@@ -14,6 +14,6 @@ public:
 };
 
 
-#include "../../sources/entities/vector_utils.cpp"
+#include "../../../sources/entities/algebra/vector_utils.cpp"
 
 #endif //GLASSYRENDER_VECTOR_UTILS_H

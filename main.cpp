@@ -5,7 +5,8 @@
 
 #include "Constants.h"
 #include "include/scene/scene3d.h"
-#include "include/entities/matrix.h"
+#include "include/entities/algebra/matrix.h"
+#include "include/algorithms/brdf.h"
 
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -36,42 +37,84 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
         return 1;
     }
     HWND hWnd = create_window(hInstance, CLASS_NAME, WINDOW_NAME);
-    scene.ambient_light = 0.3f;
+
+    scene.ambient_light = 0.2f;
+    scene.camera_exposure = 0.5;
 
     auto spheres = std::vector<sphere>();
-    spheres.push_back({1.5,
-                       {-1.5, 0, 5},
-                       {0.1, 0.5, 0.8}});
-    spheres.push_back({1.5,
-                       {1.5, 0, 5},
-                       {0.5, 0.1, 0.0}});
-    spheres.push_back({2,
-                       {4, -1, 0},
-                       {0.5, 1, 0.5}});
-    spheres.push_back({2,
-                       {-4, -1, 0},
-                       {0.5, 0.2, 0.1}});
-    spheres.push_back({17,
-                       {0, -20, 8},
-                       {0.2, 0.6, 0.1}});
+    material material1({219/255.0f,112/255.0f,147/255.0f}, vec3f{1, 0.97, 0.5}, 0.96);
+    material material2({219/255.0f,112/255.0f,147/255.0f}, vec3f(0.97), 0.8);
+    material material3({219/255.0f,112/255.0f,147/255.0f}, vec3f(0.97), 0.7);
+    material material4({219/255.0f,112/255.0f,147/255.0f}, vec3f(0.97), 0.6);
+    material material5({219/255.0f,112/255.0f,147/255.0f}, vec3f(0.97), 0.5);
+    material material6({219/255.0f,112/255.0f,147/255.0f}, vec3f(0.97), 0.4);
+    material material7({219/255.0f,112/255.0f,147/255.0f}, vec3f(0.97), 0.3);
+    material material8({219/255.0f,112/255.0f,147/255.0f}, vec3f(0.97), 0.2);
+    material material9({219/255.0f,112/255.0f,147/255.0f}, vec3f(0.97), 0.1);
+
+    spheres.push_back({
+                              1.4,
+                              {-15, 0, 0},
+                              material1
+                      });
+    spheres.push_back({
+                              1.4,
+                              {-12, 0, 0},
+                              material2
+                      });
+    spheres.push_back({
+                              1.4,
+                              {-9, 0, 0},
+                              material3
+                      });
+    spheres.push_back({
+                              1.4,
+                              {-6, 0, 0},
+                              material4
+                      });
+    spheres.push_back({
+                              1.4,
+                              {-3, 0, 0},
+                              material5
+                      });
+    spheres.push_back({
+                              1.4,
+                              {0, 0, 0},
+                              material6
+                      });
+    spheres.push_back({
+                              1.4,
+                              {3, 0, 0},
+                              material7
+                      });
+    spheres.push_back({
+                              1.4,
+                              {6, 0, 0},
+                              material8
+                      });
+    spheres.push_back({
+                              1.4,
+                              {9, 0, 0},
+                              material9
+                      });
     scene.model.spheres = spheres;
 
     auto lights = ARRAY_LIST<i_light_source *>();
-    lights.push_back(new point_light_source{0.6, {0, 2, 5}});
-    lights.push_back(new point_light_source{7, {-2, 5, 1}});
-    lights.push_back(new point_light_source{0.6, {2, 5, 1}});
-    lights.push_back(new vector_light_source{0.4f, {5, -1, 0.03}});
+//    lights.push_back(new point_light_source{6, {1, 1, 1}, {0, 2, 5}});
+//    lights.push_back(new point_light_source{7, {1, 1, 1}, {-2, 5, 1}});
+    lights.push_back(new point_light_source{5, {1, 1, 1}, {-3, 10, -40}});
+//    lights.push_back(new vector_light_source{0.4f, {5, -1, 0.03}});
     scene.model.lights = lights;
     affine_transform at = {
-            1, 0, 0, 0,
+            1, 0, 0, -3,
             0, 1, 0, -5,
-            0, 0, 1, -30,
+            0, 0, 1, -40,
             0, 0, 0, 1
     };
     scene.viewport.apply(at);
-    scene.viewport.apply(R3);
-    scene.viewport.apply(R2);
-    scene.viewport.apply(R);
+//    scene.viewport.apply(R3);
+//    scene.viewport.apply(R2);
+//    scene.viewport.apply(R);
     ShowWindow(hWnd, nCmdShow);
     UpdateWindow(hWnd);
     MSG msg;

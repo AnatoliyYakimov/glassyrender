@@ -3,7 +3,7 @@
 //
 
 
-#include "../../include/entities/affine_transform.h"
+#include "../../../include/entities/algebra/affine_transform.h"
 
 affine_transform affine_transform_factory::to_point(const point3f &from, const point3f &to) {
     return affine_transform_factory::move(to - from);

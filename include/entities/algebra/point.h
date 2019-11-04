@@ -60,5 +60,5 @@ public:
 typedef point<3, BYTE> color;
 typedef point<3, float> point3f;
 
-#include "../../sources/entities/point.cpp"
+#include "../../../sources/entities/algebra/point.cpp"
 #endif //GLASSYRENDER_POINT_H

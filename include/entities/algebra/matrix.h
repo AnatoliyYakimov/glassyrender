@@ -89,6 +89,6 @@ public:
     }
 };
 
-#include "../../sources/entities/matrix.cpp"
+#include "../../../sources/entities/algebra/matrix.cpp"
 
 #endif //GLASSYRENDER_MATRIX_H
