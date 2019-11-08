@@ -9,6 +9,6 @@
 
 
 #### Используемые статьи и литература:
-* [Physically Based Rendering:From Theory To ImplementationMatt Pharr, Wenzel Jakob, and Greg Humphreys](http://www.pbr-book.org/)
+* [Physically Based Rendering:From Theory To Implementation. Matt Pharr, Wenzel Jakob, and Greg Humphreys](http://www.pbr-book.org/)
 * [Habr: Трёхмерная графика с нуля.](https://habr.com/ru/post/342510/)
 * [Habr: Краткий курс компьютерной графики](https://habr.com/ru/post/248153/)
