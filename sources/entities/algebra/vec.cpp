@@ -14,9 +14,9 @@ inline COLORREF VEC::get_color_ref() {
 }
 
 template<size_t dim, typename number_t>
-VEC::vec(const VEC &v) {
+VEC::vec(const VEC &v) : coords() {
     for (size_t i = dim; i--;) {
-        (*this)[i] = v.coords[i];
+        coords[i] = v.coords[i];
     }
 }
 

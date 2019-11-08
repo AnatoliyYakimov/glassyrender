@@ -119,6 +119,7 @@ public:
 
 
 typedef vec<3, float> vec3f;
+typedef vec<2, float> vec2f;
 
 
 #include "../../../sources/entities/algebra/vec.cpp"

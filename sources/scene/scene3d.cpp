@@ -48,15 +48,17 @@ vec3f scene3d::trace_ray(const vec3f &from_point, const vec3f &v) {
     if (nearest == nullptr) {
         return model.scene_color;
     }
-    auto[collision_point, sphere] = *nearest;
-    vec3f rgb = sphere->material.albedo * ambient_light
-                + brdf.count_irradiance(collision_point, v.normalize(), sphere->norm(collision_point), sphere->material,
+    vec3f collision_point = nearest->first;
+    const sphere *sphere = nearest->second;
+    const material mat(sphere->mat);
+    vec3f rgb = mat.albedo * ambient_light
+                + brdf.count_irradiance(collision_point, v.normalize(), sphere->normal_at_point(collision_point), mat,
                                         model);
     return rgb;
 }
 
 void scene3d::apply_tone_mapping(int H, int W) {
-    vec3f unit = {1, 1, 1};
+    vec3f unit = vec3f{1, 1, 1};
     for (int i = 0; i < W; ++i) {
         for (int j = 0; j < H; ++j) {
             vec3f &v = frame_buffer[j + H * i];

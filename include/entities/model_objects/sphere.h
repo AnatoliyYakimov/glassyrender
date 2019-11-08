@@ -8,29 +8,47 @@
 #include <utility>
 #include "../algebra/vec.h"
 #include "material.h"
+#include "objects.h"
 
-class sphere {
+class sphere : public i_object{
 public:
     float R;
     vec3f O;
-    material material;
+    material mat;
 
-    [[nodiscard]] std::pair<float, float> ray_collision(const vec3f &fromPoint, const vec3f &D) const {
-        vec3f OC = fromPoint - O;
-        float k1 = 2 * (D * D);
-        float k2 = 2 * (D * OC);
+    sphere(float r, const vec3f &o, const material &material) : R(r), O(o), mat(material) {}
+    sphere(const sphere &s) = default;
+
+    [[nodiscard]] vec3f* ray_intersection(const vec3f &from_point, const vec3f &v, const float& t_min, const float& t_max) const override {
+        vec3f OC = from_point - O;
+        float k1 = 2 * (v * v);
+        float k2 = 2 * (v * OC);
         float k3 = (OC * OC) - R * R;
         float d = k2 * k2 - 2 * k1 * k3;
         if (d < 0) {
-            return std::make_pair(-1, -1);
+            return nullptr;
         }
         float sqrt = std::sqrt(d);
-        float x1 = (sqrt - k2) / (k1);
-        float x2 = (-sqrt - k2) / (k1);
-        return std::pair{x1, x2};
+        float t1 = (sqrt - k2) / (k1);
+        float t2 = (-sqrt - k2) / (k1);
+        bool b1 = t1 > t_min && t1 < t_max,
+                b2 = t2 > t_min && t2 < t_max;
+        if (b1 || b2) {
+            float min = 0;
+            if (b1 && b2) {
+                min = t1 < t2 ? t1 : t2;
+            } else {
+                min = b1 ? t1 : t2;
+            }
+            return new vec3f(min * v);
+        }
+        else {
+            return nullptr;
+        }
     }
 
-    vec3f norm(const vec3f &p) const {
+
+    vec3f normal_at_point(const vec3f &p) const {
         return (O - p).normalize();
     }
 };

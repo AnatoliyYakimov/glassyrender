@@ -10,7 +10,7 @@
 class i_light_source {
 protected:
     float intensity;
-    vec3f color = {1, 1, 1};
+    vec3f color = vec3f(1);
 
     i_light_source() = default;
 

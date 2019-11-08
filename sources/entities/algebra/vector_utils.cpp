@@ -9,7 +9,7 @@ template<typename number_t>
 vec<3, number_t> vector_utils<number_t>::vector_product(const vec<3, number_t> &v1, const vec<3, number_t> &v2) {
     vec<3, number_t> res;
     matrix<3, 3, number_t> mat = {
-            {0, 0, 0},
+            vec3f(0),
             v1,
             v2
     };

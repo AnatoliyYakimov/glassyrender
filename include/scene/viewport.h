@@ -13,8 +13,8 @@
 class viewport {
 private:
     affine_transform to_world;
-    vec3f Vy = {0, 1, 0};
-    vec3f Vx = {1, 0, 0};
+    vec3f Vy = vec3f{0, 1, 0};
+    vec3f Vx = vec3f{1, 0, 0};
     const float L = -0.5f;
     const float T = 0.5f;
     float divider = 1.0f;

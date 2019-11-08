@@ -7,7 +7,7 @@
 vec3f
 BRDF::count_irradiance(const vec3f &p, const vec3f &v, const vec3f &n, const material &material, const model &model) {
     vec3f l;
-    vec3f irradiance = {0, 0, 0};
+    vec3f irradiance = vec3f(0);
     vec3f Fdiffuse = material.albedo;
     float k = (material.Kd + 1) * (material.Kd + 1) / 8;
     float NdotH, NdotL, NdotV, VdotH;

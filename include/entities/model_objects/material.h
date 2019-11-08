@@ -16,13 +16,16 @@ public:
 
     material() = default;
 
-    material(const material &m) = default;
+    material(const material &m) : albedo(m.albedo), frenel(m.frenel), Ks(m.Ks), Kd(m.Kd) {};
 
     material(const vec3f &albedo, const vec3f& frenel, float ks)
             : albedo(albedo),
               Ks(ks),
               Kd(1.0f - ks),
               frenel(frenel) {};
+
+    material(const vec3f &albedo, float ks)
+            : material(albedo, ks * vec3f(0.4).mix(albedo), ks){};
 };
 
 #endif //GLASSYRENDER_MATERIAL_H

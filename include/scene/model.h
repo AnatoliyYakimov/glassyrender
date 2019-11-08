@@ -14,7 +14,7 @@ class model {
 public:
     std::vector<sphere> spheres;
     std::vector<i_light_source *> lights;
-    vec3f scene_color = {1, 1, 1};
+    vec3f scene_color = vec3f(1);
 
     model() = default;
 
