@@ -44,15 +44,13 @@ void scene3d::render_scene(int H, int W) {
 }
 
 vec3f scene3d::trace_ray(const vec3f &from_point, const vec3f &v) {
-    auto nearest = model.nearest_collision(from_point, v, 1, inf);
+    const intersection* nearest = model.nearest_collision(from_point, v, 1, inf);
     if (nearest == nullptr) {
         return model.scene_color;
     }
-    vec3f collision_point = nearest->first;
-    const sphere *sphere = nearest->second;
-    const material mat(sphere->mat);
-    vec3f rgb = mat.albedo * ambient_light
-                + brdf.count_irradiance(collision_point, v.normalize(), sphere->normal_at_point(collision_point), mat,
+    vec3f p = nearest->intersection_point;
+    vec3f rgb = nearest->mat.albedo * ambient_light
+                + brdf.count_irradiance(p, v.normalize(), nearest->normal, nearest->mat,
                                         model);
     return rgb;
 }

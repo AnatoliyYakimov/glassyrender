@@ -8,7 +8,7 @@
 #include <utility>
 #include "../algebra/vec.h"
 #include "material.h"
-#include "objects.h"
+#include "i_object.h"
 
 class sphere : public i_object{
 public:
@@ -19,7 +19,7 @@ public:
     sphere(float r, const vec3f &o, const material &material) : R(r), O(o), mat(material) {}
     sphere(const sphere &s) = default;
 
-    [[nodiscard]] vec3f* ray_intersection(const vec3f &from_point, const vec3f &v, const float& t_min, const float& t_max) const override {
+    [[nodiscard]] intersection* ray_intersection(const vec3f &from_point, const vec3f &v, const float& t_min, const float& t_max) const override {
         vec3f OC = from_point - O;
         float k1 = 2 * (v * v);
         float k2 = 2 * (v * OC);
@@ -40,7 +40,9 @@ public:
             } else {
                 min = b1 ? t1 : t2;
             }
-            return new vec3f(min * v);
+            vec3f p = from_point + min * v;
+            intersection *is = new intersection(p, min, normal_at_point(p), mat);
+            return is;
         }
         else {
             return nullptr;

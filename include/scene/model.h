@@ -12,13 +12,13 @@
 
 class model {
 public:
-    std::vector<sphere> spheres;
+    std::vector<i_object *> objects;
     std::vector<i_light_source *> lights;
     vec3f scene_color = vec3f(1);
 
     model() = default;
 
-    std::pair<vec3f, const sphere *> *nearest_collision(
+    const intersection* nearest_collision(
             const vec3f &fromPoint, const vec3f &V,
             float t_min, float t_max) const;
     bool any_collision(const vec3f &fromPoint, const vec3f &V,

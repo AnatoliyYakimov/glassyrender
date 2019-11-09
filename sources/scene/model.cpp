@@ -7,35 +7,34 @@
 #include "../../include/scene/model.h"
 
 
-std::pair<vec3f, const sphere *> *
+const intersection *
 model::nearest_collision(const vec3f &fromPoint, const vec3f &V, float t_min, float t_max) const {
-    std::vector<std::pair<const vec3f* ,const sphere &>> points;
-    for (const auto &sphere : spheres) {
-        vec3f* p = sphere.ray_intersection(fromPoint, V, t_min, t_max);
-        if (p == nullptr){
+    std::vector<intersection> intersections;
+    for (const auto object : objects) {
+        intersection *is = object->ray_intersection(fromPoint, V, t_min, t_max);
+        if (is == nullptr) {
             continue;
         }
-            points.emplace_back(std::make_pair(p, sphere));
+        intersections.emplace_back(is);
     }
-    if (points.empty()) {
+    if (intersections.empty()) {
         return nullptr;
     }
-    const std::pair<const vec3f* ,const sphere &> *nearest = points.begin().base();
-    float d_min = nearest->first->norm();
-    for (const auto &item : points) {
-        float d = item.first->norm();
+    const intersection *nearest = intersections.begin().base();
+    float d_min = nearest->distance;
+    for (const auto &item : intersections) {
+        float d = item.distance;
         if (d < d_min) {
             nearest = &item;
             d_min = d;
         }
     }
-    const sphere &s = nearest->second;
-    return new std::pair<vec3f, const sphere *>(vec3f(fromPoint + *nearest->first), &s);
+    return new intersection(*nearest);
 }
 
 bool model::any_collision(const vec3f &fromPoint, const vec3f &V, float t_min, float t_max) const {
-    for (const auto &sphere : spheres) {
-        vec3f* p = sphere.ray_intersection(fromPoint, V, t_min, t_max);
+    for (const auto sphere : objects) {
+        intersection*p = sphere->ray_intersection(fromPoint, V, t_min, t_max);
         if (p != nullptr) {
             delete p;
             return true;
