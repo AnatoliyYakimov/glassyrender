@@ -5,11 +5,11 @@
 
 #include "../../../include/entities/algebra/affine_transform.h"
 
-affine_transform affine_transform_factory::to_point(const point3f &from, const point3f &to) {
+affine_transform affine_transform_factory::to_point(const vec3f &from, const vec3f &to) {
     return affine_transform_factory::move(to - from);
 }
 
-affine_transform affine_transform_factory::move(const point3f &p) {
+affine_transform affine_transform_factory::move(const vec3f &p) {
     affine_transform res = affine_transform::identity();
     for (size_t i = 3; i--;) {
         res[i][3] = p[i];
@@ -17,7 +17,7 @@ affine_transform affine_transform_factory::move(const point3f &p) {
     return res;
 }
 
-affine_transform affine_transform_factory::rotate(float phi, const point3f &axis_p, const vec3f &axis_v) {
+affine_transform affine_transform_factory::rotate(float phi, const vec3f &axis_p, const vec3f &axis_v) {
     affine_transform T = to_coords_center(axis_p),
             Tinv = move(axis_p);
     auto V1 = vec<2, float>{axis_v[0], axis_v[1]}.normalize();
@@ -55,11 +55,11 @@ affine_transform affine_transform_factory::rotate(float phi, const point3f &axis
     return T * R1 * R2 * R3 * R2inv * R1inv * Tinv  ;
 }
 
-affine_transform affine_transform_factory::to_coords_center(const point3f &p) {
+affine_transform affine_transform_factory::to_coords_center(const vec3f &p) {
     return affine_transform_factory::move(-1 * p);
 }
 
-affine_transform affine_transform_factory::stretch(const point3f &p) {
+affine_transform affine_transform_factory::stretch(const vec3f &p) {
     affine_transform res = affine_transform::identity();
     for (size_t i = 3; i--;) {
         res[i][i] = p[i];
@@ -67,7 +67,7 @@ affine_transform affine_transform_factory::stretch(const point3f &p) {
     return res;
 }
 
-affine_transform affine_transform_factory::rotateX(float phi, const point3f &p) {
+affine_transform affine_transform_factory::rotateX(float phi, const vec3f &p) {
     float rad = to_radians(phi);
     float C = cos(rad);
     float S = sin(rad);
@@ -81,7 +81,7 @@ affine_transform affine_transform_factory::rotateX(float phi, const point3f &p) 
     return move(p) * rotate * to_center;
 }
 
-affine_transform affine_transform_factory::rotateY(float phi, const point3f &p) {
+affine_transform affine_transform_factory::rotateY(float phi, const vec3f &p) {
     float rad = to_radians(phi);
     float C = cos(rad);
     float S = sin(rad);
@@ -95,7 +95,7 @@ affine_transform affine_transform_factory::rotateY(float phi, const point3f &p) 
     return move(p) * rotate * to_center;
 }
 
-affine_transform affine_transform_factory::rotateZ(float phi, const point3f &p) {
+affine_transform affine_transform_factory::rotateZ(float phi, const vec3f &p) {
     float rad = to_radians(phi);
     float C = cos(rad);
     float S = sin(rad);

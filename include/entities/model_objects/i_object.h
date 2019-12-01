@@ -7,7 +7,7 @@
 
 #include <vector>
 #include "../algebra/affine_transform.h"
-#include "material.h"
+#include "materials.h"
 
 
 class intersection {
@@ -15,7 +15,7 @@ public:
     vec3f intersection_point;
     float distance;
     vec3f normal;
-    material mat;
+    material_snapshot mat;
 
     intersection() : intersection_point(), distance(), normal(), mat() {}
 
@@ -24,7 +24,7 @@ public:
 
     intersection(const intersection *is) : intersection(*is) {}
 
-    intersection(const vec3f &intersectionPoint, float distance, const vec3f &normal, const material &mat)
+    intersection(const vec3f &intersectionPoint, float distance, const vec3f &normal, const material_snapshot &mat)
             : intersection_point(intersectionPoint), distance(distance), normal(normal), mat(mat) {}
 };
 
@@ -37,6 +37,11 @@ public:
     i_object() : to_local(affine_transform::identity()), to_world(affine_transform::identity()) {};
 
     i_object(const i_object &o) = default;
+
+    void apply(const affine_transform& at) {
+        to_world = to_world * at;
+        to_local = to_local * at.inverse();
+    }
 
     /**
      * Высчитывает пересечение с объектом

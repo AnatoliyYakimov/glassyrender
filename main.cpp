@@ -1,11 +1,11 @@
 
 #include <windows.h>
 #include <vector>
-
+#include <iostream>
 
 #include "Constants.h"
 #include "include/scene/scene3d.h"
-
+#include "include/enviroment/enviroment.h"
 
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -17,6 +17,8 @@ HWND create_window(HINSTANCE hInstance, LPCSTR className, LPCSTR windowName);
 void draw_scene(HWND pHwnd, int, int);
 
 void initialize_scene(std::vector<i_object*> &spheres);
+
+void initialize_scene2(std::vector<i_object *> &spheres);
 
 LPCSTR CLASS_NAME = "MineWindow";
 LPCSTR WINDOW_NAME = "Glassy Render";
@@ -34,13 +36,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
     if (!register_window(hInstance, CLASS_NAME, &WndProc)) {
         return 1;
     }
+
     HWND hWnd = create_window(hInstance, CLASS_NAME, WINDOW_NAME);
 
-    scene.ambient_light = 0.2f;
-    scene.camera_exposure = 1;
+    scene.ambient_light = 0.4f;
+    scene.camera_exposure = 1.5f;
+    scene.gamma = 2.2f;
 
     auto spheres = std::vector<i_object*>();
-    initialize_scene(spheres);
+    initialize_scene2(spheres);
     scene.model.objects = spheres;
 
     auto lights = std::vector<i_light_source *>();
@@ -63,62 +67,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
     return 0;
 }
 
-void initialize_scene(std::vector<i_object*> &spheres) {
-    material material1(vec3f{1, 1, 1},  0.9);
-    material material2(vec3f{1, 1, 1}, 0.8);
-    material material3(vec3f{1, 1, 1}, 0.7);
-    material material4(vec3f{1, 1, 1}, 0.6);
-    material material5(vec3f{1, 1, 1}, 0.5);
-    material material6(vec3f{1, 1, 1}, 0.4);
-    material material7(vec3f{1, 1, 1}, 0.3);
-    material material8(vec3f{1, 1, 1}, 0.2);
-    material material9(vec3f{1, 1, 1},  0.1);
-
-    spheres.push_back(new sphere{
-                              1.4,
-                              vec3f{-15, 0, 0},
-                              material1
-                      });
-    spheres.push_back(new sphere{
-                              1.4,
-                              vec3f{-12, 0, 0},
-                              material2
-                      });
-    spheres.push_back(new sphere{
-                              1.4,
-                              vec3f{-9, 0, 0},
-                              material3
-                      });
-    spheres.push_back(new sphere{
-                              1.4,
-                              vec3f{-6, 0, 0},
-                              material4
-                      });
-    spheres.push_back(new sphere{
-                              1.4,
-                              vec3f{-3, 0, 0},
-                              material5
-                      });
-    spheres.push_back(new sphere{
-                              1.4,
-                              vec3f{0, 0, 0},
-                              material6
-                      });
-    spheres.push_back(new sphere{
-                              1.4,
-                              vec3f{3, 0, 0},
-                              material7
-                      });
-    spheres.push_back(new sphere{
-                              1.4,
-                              vec3f{6, 0, 0},
-                              material8
-                      });
-    spheres.push_back(new sphere{
-                              1.4,
-                              vec3f{9, 0, 0},
-                              material9
-                      });
+void initialize_scene2(std::vector<i_object *> &spheres) {
+    auto albedo = new simple_texture(
+            R"(C:\Users\Yakimov\CLionProjects\GlassyRender\resources\Tiles69_col.tga)", true, 2.2f);
+    auto specular = new uniform_texture( {0.6, 0.6, 0.6 });
+    affine_transform at = affine_transform_factory::move(vec3f{0, 3, 0});
+    auto mat = new textured_material(albedo, specular);
+    sphere* s1 = new sphere(6, mat);
+    s1->apply(at);
+    spheres.push_back(s1);
 }
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {

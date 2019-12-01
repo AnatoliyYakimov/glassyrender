@@ -3,12 +3,11 @@
 //
 
 #include <algorithm>
-#include <memory>
 #include "../../include/scene/model.h"
 
 
 const intersection *
-model::nearest_collision(const vec3f &fromPoint, const vec3f &V, float t_min, float t_max) const {
+    model::nearest_collision(const vec3f &fromPoint, const vec3f &V, float t_min, float t_max) const {
     std::vector<intersection> intersections;
     for (const auto object : objects) {
         intersection *is = object->ray_intersection(fromPoint, V, t_min, t_max);

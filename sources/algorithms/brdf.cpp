@@ -5,7 +5,7 @@
 #include "../../include/algorithms/brdf.h"
 
 vec3f
-BRDF::count_irradiance(const vec3f &p, const vec3f &v, const vec3f &n, const material &material, const model &model) {
+BRDF::count_irradiance(const vec3f &p, const vec3f &v, const vec3f &n, const material_snapshot &material, const model &model) {
     vec3f l;
     vec3f irradiance = vec3f(0);
     vec3f Fdiffuse = material.albedo;
