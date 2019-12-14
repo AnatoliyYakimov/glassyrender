@@ -8,23 +8,28 @@
 #include <utility>
 #include <memory>
 #include "../algebra/vec.h"
-#include "materials.h"
 #include "i_object.h"
-#include "../textures/i_texture.h"
+#include "../textures/i_rgb_texture.h"
+#include "../textures/i_monochrome_texture.h"
 
 class sphere : public i_object {
 protected:
     const vec3f O = {0, 0, 0};
     float R;
-    std::shared_ptr<i_material> mat;
 
-    vec3f normal_at_point(const vec3f &p) const {
-        return (O - p).normalize();
-    }
 
 public:
 
-    sphere(float r, i_material* mat) : R(r), mat(mat) {}
+    sphere(float r,
+           i_rgb_texture *albedoMap,
+           i_monochrome_texture *roughnessMap,
+           i_rgb_texture *normalMap,
+           i_monochrome_texture *aoMap)
+            : i_object(albedoMap,
+                       roughnessMap,
+                       normalMap,
+                       aoMap),
+              R(r) {}
 
     sphere(const sphere &s) = default;
 
@@ -56,12 +61,24 @@ public:
             vec3f p_local = to_local * p_world;
             vec3f p_n = p_local.normalize();
             float x_t = 0.5 + atan2(p_n[0], p_n[2]) / (2 * M_PI);
-            float y_t = 0.5 + 0.5 * p_n[1];
+            float y_t = 0.5 - asin(p_n[1]) / M_PI;
             vec2f p_texture = vec2f{x_t, y_t};
+            vec3f normal;
+            if (normal_map) {
+                normal = normal_map->texture_at_point(p_texture);
+            } else {
+                normal = (to_world * O - p_world).normalize();
+            }
+            vec3f albedo = albedo_map->texture_at_point(p_texture);
+            float roughness = roughness_map->texture_at_point(p_texture);
+            float ao = ao_map->texture_at_point(p_texture);
             intersection *is =
                     new intersection(p_world,
-                                     min, (to_world * vec3f{0, 0, 0} - p_world).normalize(),
-                                     mat->material_at_point(p_texture));
+                                     min,
+                                     normal,
+                                     albedo,
+                                     roughness,
+                                     ao);
             return is;
         } else {
             return nullptr;

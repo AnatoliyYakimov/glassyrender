@@ -171,21 +171,11 @@ vec<N, num> operator*(const matrix<N, M, num> &lhs, const vec<M, num> &rhs) {
     return res;
 }
 
-template<size_t N, size_t M, typename num>
-point<N, num> operator*(const matrix<N, M, num> &lhs, const point<M, num> &rhs) {
-    return lhs * vec<N, num>(rhs);
-}
-
 template<typename num>
 vec<3, num> operator*(const matrix<4, 4, num> &mat, const vec<3, num> &v) {
     vec<4 , num> res = v.extend(1);
     res = mat * res;
     return res.shrink() / res[3];
-}
-
-template<typename num>
-point<3, num> operator*(const matrix<4, 4, num> &mat, const point<3, num> &p) {
-    return (mat * vec<3, num>(p)).to_point();
 }
 
 template<size_t row_size, size_t col_size, typename number_t>

@@ -6,7 +6,7 @@
 #include "../../include/scene/model.h"
 
 
-const intersection *
+intersection *
     model::nearest_collision(const vec3f &fromPoint, const vec3f &V, float t_min, float t_max) const {
     std::vector<intersection> intersections;
     for (const auto object : objects) {

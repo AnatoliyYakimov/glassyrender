@@ -18,7 +18,7 @@ public:
 
     model() = default;
 
-    const intersection* nearest_collision(
+    intersection* nearest_collision(
             const vec3f &fromPoint, const vec3f &V,
             float t_min, float t_max) const;
     bool any_collision(const vec3f &fromPoint, const vec3f &V,

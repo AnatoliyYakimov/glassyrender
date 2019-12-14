@@ -1,29 +1,19 @@
 //
 // Created by Yakimov on 25.10.2019.
 //
-
+#ifndef GLASSYRENDER_vec_H
 #include "../../../include/entities/algebra/vec.h"
-
-#ifndef GLASSYRENDER_VEC_H
-#include "../../include/entities/vec.h"
-#endif //GLASSYRENDER_VEC_H
+#endif //GLASSYRENDER_vec_H
 
 template<size_t dim, typename number_t>
-inline COLORREF VEC::get_color_ref() {
+inline COLORREF vec<dim,number_t>::get_color_ref() {
     return RGB(255 * coords[0], 255 * coords[1], 255 * coords[2]);
 }
 
 template<size_t dim, typename number_t>
-VEC::vec(const VEC &v) : coords() {
+vec<dim,number_t>::vec(const vec<dim,number_t> &v) : coords() {
     for (size_t i = dim; i--;) {
         coords[i] = v.coords[i];
-    }
-}
-
-template<size_t dim, typename number_t>
-VEC::vec(const point<dim, number_t> &p1, const point<dim, number_t> &p2) {
-    for (size_t i = dim; i--;) {
-        this->coords[i] = p2[i] - p1[i];
     }
 }
 
@@ -35,17 +25,12 @@ vec<dim, number_t>::vec(const float &val) {
 }
 
 template<size_t dim, typename number_t>
-VEC::~vec() {
-
-}
-
-template<size_t dim, typename number_t>
-float VEC::norm() const {
+float vec<dim,number_t>::norm() const {
     return (std::sqrt((*this) * (*this)));
 }
 
 template<size_t dim, typename number_t>
-float operator*(const VEC &lhs, const VEC &rhs) {
+float operator*(const vec<dim,number_t> &lhs, const vec<dim,number_t> &rhs) {
     float sum = 0;
     for (size_t i = dim; i--;) {
         sum = sum + lhs[i] * rhs[i];
@@ -54,7 +39,7 @@ float operator*(const VEC &lhs, const VEC &rhs) {
 }
 
 template<size_t dim, typename number_t>
-VEC operator*(VEC lhs, float a) {
+vec<dim,number_t> operator*(vec<dim,number_t> lhs, float a) {
     for (size_t i = dim; i--;) {
         lhs[i] *= a;
     }
@@ -62,7 +47,7 @@ VEC operator*(VEC lhs, float a) {
 }
 
 template<size_t dim, typename number_t>
-VEC operator*(float a, VEC rhs) {
+vec<dim,number_t> operator*(float a, vec<dim,number_t> rhs) {
     for (size_t i = dim; i--;) {
         rhs[i] = static_cast<number_t>(rhs[i] * a);
     }
@@ -70,7 +55,7 @@ VEC operator*(float a, VEC rhs) {
 }
 
 template<size_t dim, typename number_t>
-VEC operator+(VEC lhs, const VEC &rhs) {
+vec<dim,number_t> operator+(vec<dim,number_t> lhs, const vec<dim,number_t> &rhs) {
     for (size_t i = dim; i--;) {
         lhs[i] += rhs[i];
     }
@@ -78,7 +63,7 @@ VEC operator+(VEC lhs, const VEC &rhs) {
 }
 
 template<size_t dim, typename number_t>
-VEC operator-(VEC lhs, const VEC &rhs) {
+vec<dim,number_t> operator-(vec<dim,number_t> lhs, const vec<dim,number_t> &rhs) {
     for (size_t i = dim; i--;) {
         lhs[i] -= rhs[i];
     }
@@ -86,7 +71,7 @@ VEC operator-(VEC lhs, const VEC &rhs) {
 }
 
 template<size_t dim, typename number_t>
-VEC operator/(VEC lhs, float a) {
+vec<dim,number_t> operator/(vec<dim,number_t> lhs, float a) {
     for (size_t i = dim; i--;) {
         lhs[i] = static_cast<number_t>(lhs[i] / a);
     }
@@ -94,12 +79,12 @@ VEC operator/(VEC lhs, float a) {
 }
 
 template<size_t dim, typename number_t>
-VEC VEC::normalize() const {
+vec<dim,number_t> vec<dim,number_t>::normalize() const {
     return (*this) / this->norm();
 }
 
 template<size_t dim, typename number_t>
-VEC::vec(std::initializer_list<number_t> values) {
+vec<dim,number_t>::vec(std::initializer_list<number_t> values) {
     assert(values.size() == dim);
     auto it = values.end();
     for (size_t i = dim; i--;) {
@@ -108,12 +93,7 @@ VEC::vec(std::initializer_list<number_t> values) {
 }
 
 template<size_t dim, typename number_t>
-point<dim, number_t> VEC::to_point() const {
-    return point3f{coords[0], coords[1], coords[2]};
-}
-
-template<size_t dim, typename number_t>
-vec<dim - 1, number_t> VEC::shrink() const {
+vec<dim - 1, number_t> vec<dim,number_t>::shrink() const {
     vec<dim - 1, number_t> res;
     const number_t last = coords[dim - 1];
     for (size_t i = dim - 1; i--;) {
@@ -123,20 +103,13 @@ vec<dim - 1, number_t> VEC::shrink() const {
 }
 
 template<size_t dim, typename number_t>
-vec<dim + 1, number_t> VEC::extend(number_t value) const {
+vec<dim + 1, number_t> vec<dim,number_t>::extend(number_t value) const {
     vec<dim + 1, number_t> res;
     for (size_t i = dim; i--;) {
         res[i] = coords[i];
     }
     res[dim] = value;
     return res;
-}
-
-template<size_t dim, typename number_t>
-VEC::vec(const point<dim, number_t> &p) {
-    for (size_t i = dim; i--;) {
-        coords[i] = p[i];
-    }
 }
 
 template<size_t dim, typename number_t>

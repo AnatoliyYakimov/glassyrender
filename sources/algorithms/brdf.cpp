@@ -5,11 +5,18 @@
 #include "../../include/algorithms/brdf.h"
 
 vec3f
-BRDF::count_irradiance(const vec3f &p, const vec3f &v, const vec3f &n, const material_snapshot &material, const model &model) {
+BRDF::count_irradiance(const vec3f &p,
+                       const vec3f &v,
+                       const vec3f &n,
+                       const vec3f &albedo,
+                       const vec3f &frenel,
+                       float roughness,
+                       float ao,
+                       const model &model) {
     vec3f l;
     vec3f irradiance = vec3f(0);
-    vec3f Fdiffuse = material.albedo;
-    float k = (material.Kd + 1) * (material.Kd + 1) / 8;
+    vec3f Fdiffuse = albedo;
+    float k = (roughness + 1) * (roughness + 1) / 8;
     float NdotH, NdotL, NdotV, VdotH;
     float _G, _D;
     vec3f _F;
@@ -23,14 +30,14 @@ BRDF::count_irradiance(const vec3f &p, const vec3f &v, const vec3f &n, const mat
         NdotV = std::max(n * v, 0.0f);
         NdotH = std::max(n * h, 0.0f);
         VdotH = std::max(v * h, 0.0f);
-        float divider = 4 * NdotL * NdotV;
+        float divider = 4 * NdotL * NdotV + std::numeric_limits<float>::min();
         _G = G(NdotV, NdotL, k);
-        _D = D(NdotH, material.Kd);
-        _F = F(VdotH, material.frenel);
+        _D = D(NdotH, roughness);
+        _F = F(VdotH, frenel);
         vec3f Fcook_torrance = _G * _F * _D / divider;
         vec3f L = light->count_impact(n, p);
         irradiance = irradiance +
-                     ((material.Kd * Fdiffuse + Fcook_torrance)).mix(L);
+                (roughness * Fdiffuse + Fcook_torrance).mix(L);
     }
-    return irradiance / M_PI;
+    return irradiance * ao / M_PI;
 }

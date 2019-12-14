@@ -5,6 +5,7 @@
 #ifndef GLASSYRENDER_COLOR_UTILS_H
 #define GLASSYRENDER_COLOR_UTILS_H
 
+#include <wingdi.h>
 #include "../algebra/vec.h"
 
 class color_utils {

@@ -19,7 +19,7 @@ private:
     const float T = 0.5f;
     float divider = 1.0f;
 
-    inline point2f camera_to_viewport(const int &u, const int &v) {
+    inline vec2f camera_to_viewport(const int &u, const int &v) {
         float x = L + u * divider;
         float y = T - v * divider;
         return {x, y};
@@ -39,7 +39,7 @@ public:
     void apply(const affine_transform &at);
 
     inline vec3f screen_to_world(const int &u, const int &v) {
-            const point2f Pv = camera_to_viewport(u, v);
+            const vec2f Pv = camera_to_viewport(u, v);
             const vec3f Pw = origin_pos + Pv[0] * Vx + Pv[1] * Vy;
             return Pw - camera_pos;
     };

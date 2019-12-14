@@ -70,16 +70,10 @@ public:
     friend inline vec<N, num> operator*(const matrix<N, M, num> &lhs, const vec<M, num> &rhs);
 
     template<size_t N, size_t M, typename num>
-    friend inline point<N, num> operator*(const matrix<N, M, num> &lhs, const point<M, num> &rhs);
-
-    template<size_t N, size_t M, typename num>
     friend inline matrix<N, M, num> operator/(const matrix<N, M, num> &lhs, num a);
 
     template<typename num>
     friend inline vec<3, num> operator*(const matrix<4, 4, num> &mat, const vec<3, num> &v);
-
-    template<typename num>
-    friend inline point<3, num> operator*(const matrix<4, 4, num> &mat, const point<3, num> &p);
 
     friend std::ostream &operator<<(std::ostream &os, const matrix &matrix) {
         for (size_t i = 0; i < row_size; i++) {

@@ -47,7 +47,14 @@ public:
      * @param model - модель которую необходимо рендерить
      * @return - цвет поврхности
      */
-    vec3f count_irradiance(const vec3f &p, const vec3f &v, const vec3f &n, const material_snapshot& material, const model& model);
+    vec3f count_irradiance(const vec3f &p,
+                           const vec3f &v,
+                           const vec3f &n,
+                           const vec3f &albedo,
+                           const vec3f &frenel,
+                           float roughness,
+                           float ao,
+                           const model &model);
 };
 
 

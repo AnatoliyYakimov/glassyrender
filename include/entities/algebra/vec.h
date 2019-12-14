@@ -2,15 +2,13 @@
 // Created by Yakimov on 10.10.2019.
 //
 
-#ifndef GLASSYRENDER_VEC_H
-#define GLASSYRENDER_VEC_H
+#ifndef GLASSYRENDER_vec_H
+#define GLASSYRENDER_vec_H
 
 #include <ostream>
 #include <cmath>
-#include "point.h"
 #include <cassert>
-
-#define VEC vec<dim,number_t>
+#include <windef.h>
 
 /**
  * Класс, реализующий функционал вектора линейной алгебры.
@@ -25,25 +23,19 @@ public:
 
     vec() = default;
 
-    vec(const VEC &v);
-
-    explicit vec(const point<dim, number_t> &p);
-
-    explicit vec(const point<dim, number_t> &p1, const point<dim, number_t> &p2);
+    vec(const vec &v);
 
     explicit vec(const float &val);
 
     vec(std::initializer_list<number_t> values);
 
-    ~vec();
+    ~vec(){};
 
     [[nodiscard]] float norm() const;
 
-    [[nodiscard]] VEC normalize() const;
+    [[nodiscard]] vec<dim,number_t> normalize() const;
 
-    [[nodiscard]] VEC mix(VEC v) const;
-
-    [[nodiscard]] point<dim, number_t> to_point() const;
+    [[nodiscard]] vec<dim,number_t> mix(vec<dim,number_t> v) const;
 
     vec<dim + 1, number_t> extend(number_t value) const;
 
@@ -65,30 +57,30 @@ public:
      * @return - скалярное произведение векторов
      */
     template<size_t N, typename num_t>
-    friend float operator*(const VEC &v1, const VEC &v2);
+    friend float operator*(const vec<dim,number_t> &v1, const vec<dim,number_t> &v2);
 
     template<size_t N, typename num_t>
-    friend VEC operator+(VEC lhs, const VEC &rhs);
+    friend vec<dim,number_t> operator+(vec<dim,number_t> lhs, const vec<dim,number_t> &rhs);
 
     template<size_t N, typename num_t>
-    friend VEC operator+(float a, VEC rhs);
+    friend vec<dim,number_t> operator+(float a, vec<dim,number_t> rhs);
 
     template<size_t N, typename num_t>
-    friend VEC operator-(VEC lhs, const VEC &rhs);
+    friend vec<dim,number_t> operator-(vec<dim,number_t> lhs, const vec<dim,number_t> &rhs);
 
     template<size_t N, typename num_t>
-    friend VEC operator*(VEC lhs, float a);
+    friend vec<dim,number_t> operator*(vec<dim,number_t> lhs, float a);
 
     template<size_t N, typename num_t>
-    friend VEC operator*(float a, VEC lhs);
+    friend vec<dim,number_t> operator*(float a, vec<dim,number_t> lhs);
 
     template<size_t N, typename num_t>
-    friend VEC operator/(VEC lhs, float a);
+    friend vec<dim,number_t> operator/(vec<dim,number_t> lhs, float a);
 
     template<size_t N, typename num_t>
-    friend VEC operator/(VEC lhs, const VEC& rhs);
+    friend vec<dim,number_t> operator/(vec<dim,number_t> lhs, const vec<dim,number_t>& rhs);
 
-    bool operator==(const VEC &rhs) const {
+    bool operator==(const vec<dim,number_t> &rhs) const {
         bool equals = true;
         for (size_t i = dim; i-- && equals;) {
             equals = rhs.coords[i] == this->coords[i];
@@ -118,10 +110,14 @@ public:
 
 
 
+typedef vec<4, float> vec4f;
 typedef vec<3, float> vec3f;
 typedef vec<2, float> vec2f;
+
+typedef vec<3, int> vec3i;
+typedef vec<2, int> vec2i;
 
 
 #include "../../../sources/entities/algebra/vec.cpp"
 
-#endif //GLASSYRENDER_VEC_H
+#endif //GLASSYRENDER_vec<dim,number_t>_H
