@@ -22,7 +22,7 @@ private:
     inline vec2f camera_to_viewport(const int &u, const int &v) {
         float x = L + u * divider;
         float y = T - v * divider;
-        return {x, y};
+        return vec2f{x, y};
     }
 
 public:

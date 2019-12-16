@@ -27,6 +27,7 @@ void viewport::apply(const affine_transform &at) {
     Vx = ((at * Vx.extend(0)).shrink()).normalize();
     Vy = ((at * Vy.extend(0)).shrink()).normalize();
     origin_pos = at * origin_pos;
-    camera_pos = origin_pos - d * vector_utils<float>::vector_product(Vx, Vy).normalize();
+    camera_pos = origin_pos - d * vector_utils<float>::vector_product(Vx,
+                                                                      Vy).normalize();
 }
 

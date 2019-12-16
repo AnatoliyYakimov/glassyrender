@@ -36,17 +36,17 @@ vector<i_object *> *obj_file_handler::load(const std::string &file_path) {
 }
 
 void obj_file_handler::parse_v_vertex(const vector<string> &strs) {
-    vec3f vertex = {stof(strs[1]), stof(strs[2]), stof(strs[3])};
+    vec3f vertex = vec3f{stof(strs[1]), stof(strs[2]), stof(strs[3])};
     vertices->push_back(vertex);
 }
 
 void obj_file_handler::parse_vt_vertex(const vector<string> &strs) {
-    vec2f vertex_t = {stof(strs[1]), stof(strs[2])};
+    vec2f vertex_t = vec2f{stof(strs[1]), stof(strs[2])};
     t_vertices->push_back(vertex_t);
 }
 
 void obj_file_handler::parse_vn_vertex(const vector<string> &strs) {
-    vec3f vertex_n = {stof(strs[1]), stof(strs[2]), stof(strs[3])};
+    vec3f vertex_n = vec3f{stof(strs[1]), stof(strs[2]), stof(strs[3])};
     n_vertices->push_back(vertex_n);
 }
 

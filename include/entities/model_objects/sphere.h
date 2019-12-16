@@ -14,7 +14,7 @@
 
 class sphere : public i_object {
 protected:
-    const vec3f O = {0, 0, 0};
+    const vec3f O = vec3f{0, 0, 0};
     float R;
 
 
@@ -59,7 +59,7 @@ public:
             }
             vec3f p_world = from_point + min * v;
             vec3f p_local = to_local * p_world;
-            vec3f p_n = p_local.normalize();
+            vec3f p_n = p_local.normalized_copy();
             float x_t = 0.5 + atan2(p_n[0], p_n[2]) / (2 * M_PI);
             float y_t = 0.5 - asin(p_n[1]) / M_PI;
             vec2f p_texture = vec2f{x_t, y_t};
@@ -67,7 +67,7 @@ public:
             if (normal_map) {
                 normal = normal_map->texture_at_point(p_texture);
             } else {
-                normal = (to_world * O - p_world).normalize();
+                normal = (to_world * O - p_world).normalized_copy();
             }
             vec3f albedo = albedo_map->texture_at_point(p_texture);
             float roughness = roughness_map->texture_at_point(p_texture);

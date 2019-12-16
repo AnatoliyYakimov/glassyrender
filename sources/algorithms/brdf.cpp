@@ -25,7 +25,7 @@ BRDF::count_irradiance(const vec3f &p,
         if (model.any_collision(p, -l, eps, inf)) {
             continue;
         }
-        vec3f h = (l + v).normalize();
+        vec3f h = (l + v).normalized_copy();
         NdotL = std::max(n * l, 0.0f);
         NdotV = std::max(n * v, 0.0f);
         NdotH = std::max(n * h, 0.0f);

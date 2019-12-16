@@ -17,9 +17,10 @@
  */
 template<size_t dim, typename number_t>
 class vec {
-public:
-
+private:
     number_t coords[dim];
+
+public:
 
     vec() = default;
 
@@ -27,13 +28,15 @@ public:
 
     explicit vec(const float &val);
 
-    vec(std::initializer_list<number_t> values);
+    vec(std::initializer_list<number_t> &&values);
 
     ~vec(){};
 
     [[nodiscard]] float norm() const;
 
-    [[nodiscard]] vec<dim,number_t> normalize() const;
+    [[nodiscard]] vec<dim,number_t> normalized_copy() const;
+
+    vec<dim,number_t>& normalize();
 
     [[nodiscard]] vec<dim,number_t> mix(vec<dim,number_t> v) const;
 
@@ -47,6 +50,34 @@ public:
 
     template<size_t N, typename num_t>
     friend vec<N, num_t> exp(vec<N, num_t> v);
+
+    vec<dim, number_t> &operator=(const vec<dim, number_t> &v) {
+        for (size_t i = dim; i--;) {
+            (*this)[i] = v[i];
+        }
+        return *this;
+    }
+
+    vec<dim, number_t> &operator+=(const vec<dim, number_t> &v) {
+        for (size_t i = dim; i--;) {
+            (*this)[i] += v[i];
+        }
+        return *this;
+    }
+
+    vec<dim, number_t> &operator-=(const vec<dim, number_t> &v) {
+        for (size_t i = dim; i--;) {
+            (*this)[i] += v[i];
+        }
+        return *this;
+    }
+
+    vec<dim, number_t> &operator*=(const vec<dim, number_t> &v) {
+        for (size_t i = dim; i--;) {
+            (*this)[i] *= v[i];
+        }
+        return *this;
+    }
 
     /**
      * Скалярное произведение векторов.

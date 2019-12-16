@@ -52,7 +52,7 @@ vec3f scene3d::trace_ray(const vec3f &from_point, const vec3f &v) {
     vec3f p = is->intersection_point;
     vec3f _brdf = brdf.count_irradiance(
             p,
-            v.normalize(),
+            v.normalized_copy(),
             is->normal,
             is->albedo,
             is->frenel,

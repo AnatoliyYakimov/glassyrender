@@ -22,7 +22,13 @@ public:
 
     face(const face &f) : v(f.v), vt(f.vt), vn(f.vn) {}
 
+    face(face &&f)
+            : v(std::move(f.v)), vt(std::move(f.vt)), vn(std::move(f.vn)) {}
+
     face(const vec3i &v, const vec3i &vt, const vec3i &vn)
+            : v(v), vt(vt), vn(vn) {}
+
+    face(vec3i &&v, vec3i &&vt, vec3i &&vn)
             : v(v), vt(vt), vn(vn) {}
 };
 
@@ -38,7 +44,8 @@ public:
                      vector<vec2f> *tVertices,
                      vector<vec3f> *nVertices,
                      vector<face> *faces)
-            : vertices(vertices), t_vertices(tVertices), n_vertices(nVertices), faces(faces) {}
+            : vertices(vertices), t_vertices(tVertices), n_vertices(nVertices),
+              faces(faces) {}
 
     polygonal_object(i_rgb_texture *albedoMap,
                      i_monochrome_texture *roughnessMap,
@@ -63,8 +70,8 @@ public:
                                    const float &t_max) const override {
         struct _is {
             float d;
-            vec2f* vt;
-            const vec3f* vn;
+            vec2f *vt;
+            const vec3f *vn;
         };
         const vec3f o_l = to_local * from_point;
         const vec3f v_local = to_local * v;
@@ -75,9 +82,9 @@ public:
             const vec3f &c = (*vertices)[face.v[2] - 1];
             affine_transform T;
             for (size_t j = 3; j--;) {
-                T[j] = {a[j] - c[j], b[j] - c[j], c[j]};
+                T[j] = vec4f{a[j] - c[j], b[j] - c[j], c[j], 0};
             }
-            T[3] = {0, 0, 0, 1};
+            T[3] = vec4f{0, 0, 0, 1};
             affine_transform Tinv = T.inverse();
             vec3f o = (Tinv * o_l.extend(0)).shrink();
             vec3f d = (Tinv * v_local.extend(0)).shrink();
@@ -86,12 +93,12 @@ public:
                 continue;
             }
             float u_l = o[0] + t * d[0];
-            if (u_l < 0 || u_l > 1){
+            if (u_l < 0 || u_l > 1) {
                 continue;
             }
             u_l += face.vt[0 - 1];
             float v_l = o[1] + t * d[1];
-            if (v_l < 0 || v_l > 1){
+            if (v_l < 0 || v_l > 1) {
                 continue;
             }
             v_l += face.vt[1 - 1];
@@ -103,7 +110,7 @@ public:
             return nullptr;
         }
         const _is *min = &is[0];
-        for(const _is& i : is) {
+        for (const _is &i : is) {
             if (i.d < min->d) {
                 min = &i;
             }

@@ -21,7 +21,6 @@ void initialize_scene(std::vector<i_object*> &spheres);
 
 void initialize_scene2(std::vector<i_object *> &spheres);
 
-void test();
 
 void initialize_scene3(vector<i_object *> scene);
 
@@ -42,7 +41,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
         return 1;
     }
 
-    test();
     HWND hWnd = create_window(hInstance, CLASS_NAME, WINDOW_NAME);
 
     scene.ambient_light = 0.1f;
@@ -50,8 +48,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
     scene.gamma = 2.2f;
 
     auto spheres = std::vector<i_object*>();
-//    initialize_scene2(spheres);
-    initialize_scene3(spheres);
+    initialize_scene2(spheres);
+//    initialize_scene3(spheres);
     scene.model.objects = spheres;
 
     auto lights = std::vector<i_light_source *>();
@@ -61,7 +59,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
     affine_transform at = {
             1, 0, 0, 0,
             0, 1, 0, 0,
-            0, 0, 1, -4,
+            0, 0, 1, -40,
             0, 0, 0, 1
     };
     scene.viewport.apply(at);
@@ -84,32 +82,30 @@ void initialize_scene3(vector<i_object *> scene) {
     vector<vec3f> *vn = new vector<vec3f>();
     vector<vec2f> *vt = new vector<vec2f>();
     vector<face> *faces = new vector<face>();
-    v->push_back(
-                         vec3f{0, 0, 0},
-                         vec3f{0, 10, 0},
-                         vec3f{10, 10, 0},
-                         vec3f{10, 0, 0}
+    v->emplace_back(
+                         vec3f{0, 0, 0}
                  );
-    vt->push_back({
-            vec2f{0,0},
-            vec2f{0,1},
-            vec2f{1,1},
-            vec2f{1,0}}
-            );
-    vn->push_back(
-            vec3f{1, 1, 1}.normalize()
-            );
-    faces->push_back(
-            face{
-                    vec3i{1, 2, 3},
-                    vec3i{1, 2, 3},
-                    vec3i{1, 1, 1}
-            },
-            face{
-                    {1, 3, 4},
-                    {1, 3, 4},
-                    {1, 1, 1}
-            });
+    v->empty();
+//    vt->emplace_back(
+//            vec2f{0,0},
+//            vec2f{0,1},
+//            vec2f{1,1},
+//            vec2f{1,0}
+//            );
+//    vn->emplace_back(
+//            vec3f{1, 1, 1}.normalized_copy()
+//            );
+//    faces->emplace_back(
+//            face{
+//                    vec3i{1, 2, 3},
+//                    vec3i{1, 2, 3},
+//                    vec3i{1, 1, 1}
+//            },
+//            face{
+//                    vec3i{1, 3, 4},
+//                    vec3i{1, 3, 4},
+//                    vec3i{1, 1, 1}
+//            });
 
     std::string path = R"(C:\Users\Yakimov\CLionProjects\GlassyRender\resources\[2K]PavingStones36\PavingStones36_col.tga)";
     i_rgb_texture* albedo = new mapped_rgb_texture(path, true, 2.2f);

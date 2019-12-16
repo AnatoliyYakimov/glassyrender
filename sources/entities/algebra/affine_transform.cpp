@@ -20,7 +20,7 @@ affine_transform affine_transform_factory::move(const vec3f &p) {
 affine_transform affine_transform_factory::rotate(float phi, const vec3f &axis_p, const vec3f &axis_v) {
     affine_transform T = to_coords_center(axis_p),
             Tinv = move(axis_p);
-    auto V1 = vec<2, float>{axis_v[0], axis_v[1]}.normalize();
+    auto V1 = vec<2, float>{axis_v[0], axis_v[1]}.normalized_copy();
     float C1 = V1[0];
     float S1 = V1[1];
     affine_transform R1 = {
@@ -31,7 +31,7 @@ affine_transform affine_transform_factory::rotate(float phi, const vec3f &axis_p
     };
     affine_transform R1inv = R1.transpose();
 
-    auto V2 = vec<2, float>{axis_v[1], axis_v[2]}.normalize();
+    auto V2 = vec<2, float>{axis_v[1], axis_v[2]}.normalized_copy();
     float C2 = V2[0];
     float S2 = V2[1];
     affine_transform R2 = {

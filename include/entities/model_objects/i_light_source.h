@@ -33,7 +33,7 @@ public:
     explicit point_light_source(float i, const vec3f &color, const vec3f &p) : i_light_source(+i, color), L(p) {}
 
     [[nodiscard]] vec3f count_impact(const vec3f &N, const vec3f &p) const override {
-        vec3f LP = (p - L).normalize();
+        vec3f LP = (p - L).normalized_copy();
         float norm = LP.norm();
         norm *= norm;
         float LPdotN = LP * N;
@@ -42,7 +42,7 @@ public:
     }
 
     [[nodiscard]] vec3f direction(const vec3f &to_point) const override {
-        return (to_point - L).normalize();
+        return (to_point - L).normalized_copy();
     }
 };
 
@@ -53,7 +53,8 @@ class vector_light_source : public i_light_source {
 private:
     vec3f L;
 public:
-    explicit vector_light_source(float i, const vec3f &color, const vec3f &l) : i_light_source(+i, color), L(l.normalize()) {}
+    explicit vector_light_source(float i, const vec3f &color, const vec3f &l) : i_light_source(+i, color), L(
+            l.normalized_copy()) {}
 
     [[nodiscard]] vec3f count_impact(const vec3f &N, const vec3f &p) const override {
         float res = intensity * (L * N);
