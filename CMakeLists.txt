@@ -2,16 +2,21 @@ CMAKE_MINIMUM_REQUIRED(VERSION 3.15)
 
 PROJECT(GlassyRender)
 SET(CMAKE_CXX_STANDARD 17)
-
+SET(NANOGUI_DIR "C://Program Files (x86)//NanoGUI")
+INCLUDE_DIRECTORIES(${NANOGUI_DIR}//include)
+find_library(nanogui
+             NAMES nanogui
+             HINTS "${NANOGUI_DIR}//lib")
 set(Boost_COMPILER       "-mgw10")
 set(Boost_USE_STATIC_LIBS        ON)
 set(Boost_USE_MULTITHREADED      ON)
 set(Boost_USE_STATIC_RUNTIME    OFF)
 
 find_package(Boost 1.62.0 COMPONENTS filesystem)
-find_package(OpenGL)
+find_package(OPENGL REQUIRED COMPONENTs OPENGL)
+MESSAGE(${NANOGUI_DIR})
 if(Boost_FOUND)
-    include_directories(${Boost_INCLUDE_DIRS})
+    include_directories(${Boost_INCLUDE_DIRS} "C://Users//Yakimov//CLionProjects//nanogui//include//")
     ADD_EXECUTABLE(GlassyRender main.cpp Constants.h include/scene/viewport.h sources/scene/model.cpp include/scene/model.h
                    include/scene/scene3d.h include/entities/model_objects/sphere.h
                    include/entities/algebra/vec.h include/entities/model_objects/i_light_source.h
@@ -26,6 +31,7 @@ if(Boost_FOUND)
                    lib/tga/tga.hpp include/entities/color/color_utils.h include/entities/textures/texture_map_loader.cpp include/entities/textures/texture_map_loader.h include/enviroment/enviroment.h include/entities/textures/i_monochrome_texture.cpp include/entities/textures/i_monochrome_texture.h)
 
     target_link_libraries(GlassyRender ${Boost_LIBRARIES})
+    target_link_libraries(GlassyRender ${OPENGL_LIBRARIES})
     IF (${CMAKE_BUILD_TYPE} STREQUAL Release)
         TARGET_COMPILE_OPTIONS(GlassyRender PRIVATE -Ofast)
     ENDIF ()

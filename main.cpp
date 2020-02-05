@@ -2,7 +2,7 @@
 #include <windows.h>
 #include <vector>
 #include <iostream>
-#include <boost/algorithm/string.hpp>
+#include <nanogui/nanogui.h>
 
 #include "Constants.h"
 #include "include/scene/scene3d.h"
@@ -17,12 +17,12 @@ HWND create_window(HINSTANCE hInstance, LPCSTR className, LPCSTR windowName);
 
 void draw_scene(HWND pHwnd, int, int);
 
-void initialize_scene(std::vector<i_object*> &spheres);
+void initialize_scene(std::vector<i_object *> &spheres);
 
 void initialize_scene2(std::vector<i_object *> &spheres);
 
 
-void initialize_scene3(vector<i_object *> scene);
+void initialize_scene3(vector<i_object *> &scene);
 
 LPCSTR CLASS_NAME = "MineWindow";
 LPCSTR WINDOW_NAME = "Glassy Render";
@@ -40,25 +40,27 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
     if (!register_window(hInstance, CLASS_NAME, &WndProc)) {
         return 1;
     }
-
+//    nanogui::init();
     HWND hWnd = create_window(hInstance, CLASS_NAME, WINDOW_NAME);
 
     scene.ambient_light = 0.1f;
     scene.camera_exposure = 1.0f;
     scene.gamma = 2.2f;
 
-    auto spheres = std::vector<i_object*>();
+    auto spheres = std::vector<i_object *>();
     initialize_scene2(spheres);
 //    initialize_scene3(spheres);
     scene.model.objects = spheres;
 
     auto lights = std::vector<i_light_source *>();
-    lights.push_back(new vector_light_source{2.0f, vec3f{1, 1, 1}, vec3f{5, -5, 5}});
-    lights.push_back(new point_light_source{0.0f, vec3f{1, 1, 1}, vec3f{0, 15, -20}});
+    lights.push_back(new vector_light_source{
+            2.0f, vec3f{1, 1, 1}, vec3f{5, -5, 5}});
+    lights.push_back(new point_light_source{
+            10.0f, vec3f{1, 0, 0}, vec3f{1, 1, -1}});
     scene.model.lights = lights;
     affine_transform at = {
-            1, 0, 0, 0,
-            0, 1, 0, 0,
+            1, 0, 0, 1,
+            0, 1, 0, 0.5,
             0, 0, 1, -40,
             0, 0, 0, 1
     };
@@ -73,7 +75,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
     return 0;
 }
 
-void initialize_scene3(vector<i_object *> scene) {
+void initialize_scene3(vector<i_object *> &scene) {
     using namespace std;
 //    obj_file_handler obj;
 //    std::string path(R"(C:\Users\Yakimov\CLionProjects\GlassyRender\resources\guitar\Guitar.obj)");
@@ -83,40 +85,51 @@ void initialize_scene3(vector<i_object *> scene) {
     vector<vec2f> *vt = new vector<vec2f>();
     vector<face> *faces = new vector<face>();
     v->emplace_back(
-                         vec3f{0, 0, 0}
-                 );
-    v->empty();
-//    vt->emplace_back(
-//            vec2f{0,0},
-//            vec2f{0,1},
-//            vec2f{1,1},
-//            vec2f{1,0}
-//            );
-//    vn->emplace_back(
-//            vec3f{1, 1, 1}.normalized_copy()
-//            );
-//    faces->emplace_back(
-//            face{
-//                    vec3i{1, 2, 3},
-//                    vec3i{1, 2, 3},
-//                    vec3i{1, 1, 1}
-//            },
-//            face{
-//                    vec3i{1, 3, 4},
-//                    vec3i{1, 3, 4},
-//                    vec3i{1, 1, 1}
-//            });
+            vec3f{0, 0, 0}
+    );
+    v->emplace_back(
+            vec3f{0, 1, 0}
+    );
+    v->emplace_back(
+            vec3f{1, 1, 0}
+    );
+    v->emplace_back(
+            vec3f{1, 0, 1}
+    );
+    vt->push_back(
+            vec2f{0, 0});
+    vt->push_back(
+            vec2f{0, 1});
+    vt->push_back(
+            vec2f{1, 1});
+    vt->push_back(
+            vec2f{1, 0});
+    vn->push_back(
+            vec3f{1, 1, 1}.normalized_copy()
+    );
 
+    faces->push_back(
+            face{
+                    vec3i{1, 2, 4},
+                    vec3i{1, 2, 4},
+                    vec3i{1, 1, 1}
+            });
+    faces->push_back(
+            face{
+                    vec3i{3, 2, 4},
+                    vec3i{3, 2, 4},
+                    vec3i{1, 1, 1}
+            });
     std::string path = R"(C:\Users\Yakimov\CLionProjects\GlassyRender\resources\[2K]PavingStones36\PavingStones36_col.tga)";
-    i_rgb_texture* albedo = new mapped_rgb_texture(path, true, 2.2f);
+    i_rgb_texture *albedo = new mapped_rgb_texture(path, true, 2.2f);
     path = R"(C:\Users\Yakimov\CLionProjects\GlassyRender\resources\[2K]PavingStones36\PavingStones36_AO.tga)";
-    i_monochrome_texture* ao = new mapped_monochrome_texture(path);
+    i_monochrome_texture *ao = new mapped_monochrome_texture(path);
 
     path = R"(C:\Users\Yakimov\CLionProjects\GlassyRender\resources\[2K]PavingStones36\PavingStones36_nrm.tga)";
-    i_rgb_texture* normal = new mapped_rgb_texture(path);
+    i_rgb_texture *normal = new mapped_rgb_texture(path);
 
     path = R"(C:\Users\Yakimov\CLionProjects\GlassyRender\resources\[2K]PavingStones36\PavingStones36_rgh.tga)";
-    i_monochrome_texture* rgh = new mapped_monochrome_texture(path);
+    i_monochrome_texture *rgh = new mapped_monochrome_texture(path);
     affine_transform at = affine_transform_factory::move(vec3f{0, 0, 0});
     scene.push_back(
             new polygonal_object(
@@ -133,18 +146,18 @@ void initialize_scene3(vector<i_object *> scene) {
 
 void initialize_scene2(std::vector<i_object *> &spheres) {
     std::string path = R"(C:\Users\Yakimov\CLionProjects\GlassyRender\resources\[2K]PavingStones36\PavingStones36_col.tga)";
-    i_rgb_texture* albedo = new mapped_rgb_texture(path, true, 2.2f);
+    i_rgb_texture *albedo = new mapped_rgb_texture(path, true, 2.2f);
     path = R"(C:\Users\Yakimov\CLionProjects\GlassyRender\resources\[2K]PavingStones36\PavingStones36_AO.tga)";
-    i_monochrome_texture* ao = new mapped_monochrome_texture(path);
+    i_monochrome_texture *ao = new mapped_monochrome_texture(path);
 
     path = R"(C:\Users\Yakimov\CLionProjects\GlassyRender\resources\[2K]PavingStones36\PavingStones36_nrm.tga)";
-    i_rgb_texture* normal = new mapped_rgb_texture(path);
+    i_rgb_texture *normal = new mapped_rgb_texture(path);
 
     path = R"(C:\Users\Yakimov\CLionProjects\GlassyRender\resources\[2K]PavingStones36\PavingStones36_rgh.tga)";
-    i_monochrome_texture* rgh = new mapped_monochrome_texture(path);
+    i_monochrome_texture *rgh = new mapped_monochrome_texture(path);
     affine_transform at = affine_transform_factory::move(vec3f{0, 0, 0});
 
-    sphere* s1 = new sphere(12.0f, albedo, rgh, normal, ao);
+    sphere *s1 = new sphere(12.0f, albedo, rgh, normal, ao);
     s1->apply(at);
     spheres.push_back(s1);
 }

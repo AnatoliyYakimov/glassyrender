@@ -8,6 +8,7 @@
 #include <memory>
 #include <boost/scoped_ptr.hpp>
 #include "i_object.h"
+#include "../algebra/vector_utils.h"
 
 using namespace std;
 using namespace boost;
@@ -65,7 +66,7 @@ public:
               faces(faces) {}
 
     intersection *ray_intersection(const vec3f &from_point,
-                                   const vec3f &v,
+                                   const vec3f &dir,
                                    const float &t_min,
                                    const float &t_max) const override {
         struct _is {
@@ -73,37 +74,42 @@ public:
             vec2f *vt;
             const vec3f *vn;
         };
-        const vec3f o_l = to_local * from_point;
-        const vec3f v_local = to_local * v;
+        const vec3f o_local = to_local * from_point;
+        const vec3f v_local = to_local * dir;
         vector<_is> is;
         for (const auto &face : *faces) {
             const vec3f &a = (*vertices)[face.v[0] - 1];
             const vec3f &b = (*vertices)[face.v[1] - 1];
             const vec3f &c = (*vertices)[face.v[2] - 1];
-            affine_transform T;
-            for (size_t j = 3; j--;) {
-                T[j] = vec4f{a[j] - c[j], b[j] - c[j], c[j], 0};
-            }
-            T[3] = vec4f{0, 0, 0, 1};
-            affine_transform Tinv = T.inverse();
-            vec3f o = (Tinv * o_l.extend(0)).shrink();
-            vec3f d = (Tinv * v_local.extend(0)).shrink();
-            float t = -o[2] / d[2];
-            if (t < t_min && t > t_max) {
+
+            vec3f e1 = b - a;
+            vec3f e2 = c - a;
+
+            vec3f pvec = vector_utils<float>::vector_product(v_local, e2);
+            float  det = e1 * pvec;
+
+            if (det < 1e-8 && det > -1e-8) {
                 continue;
             }
-            float u_l = o[0] + t * d[0];
-            if (u_l < 0 || u_l > 1) {
+
+            float inv_det = 1.0 / det;
+            vec3f tvec = o_local - a;
+
+            float u = tvec * pvec * inv_det;
+            if (u < 0 || u > 1) {
                 continue;
             }
-            u_l += face.vt[0 - 1];
-            float v_l = o[1] + t * d[1];
-            if (v_l < 0 || v_l > 1) {
+
+            vec3f qvec = vector_utils<float>::vector_product(tvec, e1);
+            float v = v_local * qvec * inv_det;
+            if (v < 0 || v + u > 1) {
                 continue;
             }
-            v_l += face.vt[1 - 1];
-            vec2f vt = vec2f{u_l, v_l};
-            vec3f vn = interpolate_normal(face, u_l, v_l);
+
+            vec2f vt = interpolate_texture_coords(face, u, v);
+            vec3f vn = interpolate_normal(face, u, v);
+            float t = e2 * qvec * inv_det;
+
             is.push_back(_is{t, &vt, &vn});
         };
         if (is.size() == 0) {
@@ -115,7 +121,7 @@ public:
                 min = &i;
             }
         }
-        vec3f p_world = to_world * (o_l + v_local * min->d);
+        vec3f p_world = to_world * (o_local + v_local * min->d);
         const vec2f &vt = *(min->vt);
         const vec3f &normal = *(min->vn);
         vec3f albedo = albedo_map->texture_at_point(vt);
@@ -136,9 +142,16 @@ private:
         const vec3f &a = (*n_vertices)[f.vn[0] - 1];
         const vec3f &b = (*n_vertices)[f.vn[1] - 1];
         const vec3f &c = (*n_vertices)[f.vn[2] - 1];
-        float w = 1 - u - v;
-        vec3f normal = a * u + b * v + (1 - u - v) * c;
+        vec3f normal = c * u + b * v + (1 - u - v) * a;
         return normal;
+    }
+
+    vec2f interpolate_texture_coords(const face &f, float u, float v) const {
+        const vec2f &a = (*t_vertices)[f.vt[0] - 1];
+        const vec2f &b = (*t_vertices)[f.vt[1] - 1];
+        const vec2f &c = (*t_vertices)[f.vt[2] - 1];
+        vec2f vt = c * v + b * u + (1 - u - v) * a;
+        return vt;
     }
 };
 

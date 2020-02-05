@@ -3,13 +3,13 @@
 //
 
 #include "obj_file_handler.h"
-#include <boost/filesystem.hpp>
+#include <filesystem>
 #include <boost/algorithm/string.hpp>
 
 vector<i_object *> *obj_file_handler::load(const std::string &file_path) {
     //TODO генерировать исключения при некорректном файле
-    boost::filesystem::path p(file_path);
-    boost::filesystem::ifstream is(p);
+    std::filesystem::path p(file_path);
+    std::ifstream is(p);
     vector<i_object*> objects;
 
     while (!is.eof()) {
