@@ -2,7 +2,7 @@
 #include <windows.h>
 #include <vector>
 #include <iostream>
-#include <nanogui/nanogui.h>
+#include <nanogui/common.h>
 
 #include "Constants.h"
 #include "include/scene/scene3d.h"
@@ -40,7 +40,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
     if (!register_window(hInstance, CLASS_NAME, &WndProc)) {
         return 1;
     }
-//    nanogui::init();
+    nanogui::init();
     HWND hWnd = create_window(hInstance, CLASS_NAME, WINDOW_NAME);
 
     scene.ambient_light = 0.1f;
