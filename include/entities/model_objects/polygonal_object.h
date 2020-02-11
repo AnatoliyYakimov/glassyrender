@@ -6,12 +6,10 @@
 #define GLASSYRENDER_POLYGONAL_OBJECT_H
 
 #include <memory>
-#include <boost/scoped_ptr.hpp>
 #include "i_object.h"
 #include "../algebra/vector_utils.h"
 
 using namespace std;
-using namespace boost;
 
 class face {
 public:
@@ -36,10 +34,10 @@ public:
 
 class polygonal_object : public i_object {
 protected:
-    scoped_ptr <vector<vec3f>> vertices;
-    scoped_ptr <vector<vec2f>> t_vertices;
-    scoped_ptr <vector<vec3f>> n_vertices;
-    scoped_ptr <vector<face>> faces;
+    unique_ptr <vector<vec3f>> vertices;
+    unique_ptr <vector<vec2f>> t_vertices;
+    unique_ptr <vector<vec3f>> n_vertices;
+    unique_ptr <vector<face>> faces;
 public:
     polygonal_object(vector<vec3f> *vertices,
                      vector<vec2f> *tVertices,
