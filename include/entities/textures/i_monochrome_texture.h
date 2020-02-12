@@ -9,7 +9,7 @@
 #include <vector>
 #include <memory>
 #include <vec.h>
-#include "../../../lib/tga/tga.hpp"
+#include "../../../filesystem/include/tga.h"
 #include "texture_map_loader.h"
 
 class i_monochrome_texture {

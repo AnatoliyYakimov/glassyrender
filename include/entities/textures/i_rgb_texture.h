@@ -6,7 +6,7 @@
 #define GLASSYRENDER_I_RGB_TEXTURE_H
 
 #include <memory>
-#include "../../../lib/tga/tga.hpp"
+#include "../../../filesystem/include/tga.h"
 #include "../color/color_utils.h"
 #include "texture_map_loader.h"
 

@@ -7,8 +7,8 @@
 
 
 #include <vector>
-#include "../entities/model_objects/i_object.h"
-#include "../entities/model_objects/polygonal_object.h"
+#include "../../include/entities/model_objects/i_object.h"
+#include "../../include/entities/model_objects/polygonal_object.h"
 
 using namespace std;
 class obj_file_handler {
@@ -35,6 +35,13 @@ private:
 public:
 
     obj_file_handler() = default;
+
+    ~obj_file_handler() {
+        delete vertices;
+        delete n_vertices;
+        delete t_vertices;
+        delete faces;
+    }
 
     vector<i_object*>* load(const string &file_path);
 

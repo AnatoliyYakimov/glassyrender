@@ -8,7 +8,7 @@
 
 #include <vector>
 #include <vec.h>
-#include "../../../lib/tga/tga.hpp"
+#include "../../../filesystem/include/tga.h"
 
 class texture_map_loader {
 public:

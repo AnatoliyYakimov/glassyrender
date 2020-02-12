@@ -2,7 +2,7 @@
 // Created by Yakimov on 09.11.2019.
 //
 
-#include "obj_file_handler.h"
+#include <obj_file_handler.h>
 #include <filesystem>
 #include <boost/algorithm/string.hpp>
 

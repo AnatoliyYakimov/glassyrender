@@ -5,7 +5,7 @@
 
 #include "Constants.h"
 #include "include/scene/scene3d.h"
-#include "include/utils/obj_file_handler.h"
+#include <obj_file_handler.h>
 
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
