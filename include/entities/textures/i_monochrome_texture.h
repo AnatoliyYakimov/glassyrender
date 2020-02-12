@@ -8,7 +8,7 @@
 
 #include <vector>
 #include <memory>
-#include "../algebra/vec.h"
+#include <vec.h>
 #include "../../../lib/tga/tga.hpp"
 #include "texture_map_loader.h"
 

@@ -10,7 +10,7 @@
 #include <windows.h>
 #include "viewport.h"
 #include "model.h"
-#include "../entities/algebra/matrix.h"
+#include <matrix.h>
 #include "../algorithms/brdf.h"
 
 class scene3d {

@@ -7,7 +7,7 @@
 
 #include <utility>
 #include <memory>
-#include "../algebra/vec.h"
+#include <vec.h>
 #include "i_object.h"
 #include "../textures/i_rgb_texture.h"
 #include "../textures/i_monochrome_texture.h"

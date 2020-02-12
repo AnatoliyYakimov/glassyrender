@@ -5,7 +5,7 @@
 #ifndef GLASSYRENDER_COOK_TORRANCE_H
 #define GLASSYRENDER_COOK_TORRANCE_H
 
-#include "../entities/algebra/vec.h"
+#include <vec.h>
 #include "brdf.h"
 
 class schlicks_approximation : public frensel_equation {

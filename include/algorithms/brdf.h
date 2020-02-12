@@ -6,7 +6,7 @@
 #define GLASSYRENDER_BRDF_H
 
 #include <functional>
-#include "../entities/algebra/vec.h"
+#include <vec.h>
 #include "../entities/model_objects/sphere.h"
 #include "../scene/model.h"
 

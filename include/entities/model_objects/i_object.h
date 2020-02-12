@@ -6,7 +6,7 @@
 #define GLASSYRENDER_I_OBJECT_H
 
 #include <vector>
-#include "../algebra/affine_transform.h"
+#include <affine_transform.h>
 #include "../textures/i_rgb_texture.h"
 #include "../textures/i_monochrome_texture.h"
 

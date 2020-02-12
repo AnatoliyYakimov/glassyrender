@@ -7,7 +7,7 @@
 
 
 #include <vector>
-#include "../algebra/vec.h"
+#include <vec.h>
 #include "../../../lib/tga/tga.hpp"
 
 class texture_map_loader {

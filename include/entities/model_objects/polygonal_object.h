@@ -7,7 +7,7 @@
 
 #include <memory>
 #include "i_object.h"
-#include "../algebra/vector_utils.h"
+#include <vector_utils.h>
 
 using namespace std;
 

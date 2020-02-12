@@ -6,7 +6,7 @@
 #define GLASSYRENDER_COLOR_UTILS_H
 
 #include <wingdi.h>
-#include "../algebra/vec.h"
+#include <vec.h>
 
 class color_utils {
 private:

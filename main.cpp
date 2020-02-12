@@ -2,7 +2,6 @@
 #include <windows.h>
 #include <vector>
 #include <iostream>
-#include <nanogui/nanogui.h>
 
 #include "Constants.h"
 #include "include/scene/scene3d.h"
