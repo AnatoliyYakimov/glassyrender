@@ -3,7 +3,7 @@
 //
 
 
-#include "../../include/scene/viewport.h"
+#include "../include/viewport.h"
 
 
 viewport::viewport(const int W, const int H, const float d)

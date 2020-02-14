@@ -7,8 +7,8 @@
 
 #include <functional>
 #include <vec.h>
-#include "../entities/model_objects/sphere.h"
-#include "../scene/model.h"
+#include "sphere.h"
+#include "model.h"
 
 class geometry_attenuation {
 public:

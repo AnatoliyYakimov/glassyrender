@@ -2,7 +2,7 @@
 // Created by Yakimov on 01.11.2019.
 //
 
-#include "../../include/algorithms/brdf.h"
+#include "../include/brdf.h"
 
 vec3f
 BRDF::count_irradiance(const vec3f &p,

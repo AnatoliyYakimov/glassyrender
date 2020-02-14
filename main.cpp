@@ -4,7 +4,8 @@
 #include <iostream>
 
 #include "Constants.h"
-#include "include/scene/scene3d.h"
+#include <scene3d.h>
+#include <polygonal_object.h>
 #include <obj_file_handler.h>
 
 

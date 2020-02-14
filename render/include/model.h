@@ -6,9 +6,9 @@
 #define GLASSYRENDER_MODEL_H
 
 #include <vector>
-#include "../entities/model_objects/sphere.h"
+#include "sphere.h"
 #include "../../Constants.h"
-#include "../entities/model_objects/i_light_source.h"
+#include "i_light_source.h"
 
 class model {
 public:

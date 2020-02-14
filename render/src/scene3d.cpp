@@ -1,8 +1,8 @@
 //
 // Created by Yakimov on 25.10.2019.
 //
-#include "../../include/scene/scene3d.h"
-#include "../../include/algorithms/cook_torrance.h"
+#include "../include/scene3d.h"
+#include "../include/cook_torrance.h"
 
 
 void scene3d::clear(HDC dc) {

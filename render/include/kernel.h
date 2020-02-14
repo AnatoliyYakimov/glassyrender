@@ -6,7 +6,7 @@
 #define GLASSYRENDER_KERNEL_H
 
 
-#include "../scene/viewport.h"
+#include "viewport.h"
 
 class kernel {
 

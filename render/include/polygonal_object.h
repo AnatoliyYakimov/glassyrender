@@ -6,9 +6,8 @@
 #define GLASSYRENDER_POLYGONAL_OBJECT_H
 
 #include <memory>
-#include "i_object.h"
+#include <i_object.h>
 #include <vector_utils.h>
-
 using namespace std;
 
 class face {
@@ -30,7 +29,6 @@ public:
     face(vec3i &&v, vec3i &&vt, vec3i &&vn)
             : v(v), vt(vt), vn(vn) {}
 };
-
 
 class polygonal_object : public i_object {
 protected:

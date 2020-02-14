@@ -6,9 +6,9 @@
 #define GLASSYRENDER_I_RGB_TEXTURE_H
 
 #include <memory>
-#include "../../../filesystem/include/tga.h"
-#include "../color/color_utils.h"
-#include "texture_map_loader.h"
+#include <tga.h>
+#include <color_utils.h>
+#include <texture_map_loader.h>
 
 class i_rgb_texture {
 public:

@@ -8,10 +8,10 @@
 
 #include <vector>
 #include <windows.h>
-#include "viewport.h"
-#include "model.h"
+#include <viewport.h>
+#include <model.h>
 #include <matrix.h>
-#include "../algorithms/brdf.h"
+#include <brdf.h>
 
 class scene3d {
 public:

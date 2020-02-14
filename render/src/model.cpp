@@ -3,7 +3,7 @@
 //
 
 #include <algorithm>
-#include "../../include/scene/model.h"
+#include "../include/model.h"
 
 
 intersection *
