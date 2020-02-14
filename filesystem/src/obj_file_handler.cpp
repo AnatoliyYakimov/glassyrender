@@ -3,14 +3,12 @@
 //
 
 #include <obj_file_handler.h>
-#include <filesystem>
 #include <boost/algorithm/string.hpp>
+#include <fstream>
 
-vector<i_object *> *obj_file_handler::load(const std::string &file_path) {
+void obj_file_handler::load(const std::string &file_path) {
     //TODO генерировать исключения при некорректном файле
-    std::filesystem::path p(file_path);
-    std::ifstream is(p);
-    vector<i_object*> objects;
+    std::ifstream is(file_path);
 
     while (!is.eof()) {
         char* str = new char[128];
@@ -31,8 +29,6 @@ vector<i_object *> *obj_file_handler::load(const std::string &file_path) {
         }
         delete[] str;
     }
-    //objects.push_back(new polygonal_object(vertices, t_vertices, faces));
-    return nullptr;
 }
 
 void obj_file_handler::parse_v_vertex(const vector<string> &strs) {
@@ -78,19 +74,19 @@ void obj_file_handler::triangulate_polygon(const vector<string> &strs) {
 }
 
 void obj_file_handler::parse_face_internal(const vector<string> &strs) {
-    face f{};
     auto it = strs.begin();
     if (*it == "f") {
         it++;
     }
     for (int i = 0; it < strs.end(); ++i, ++it) {
+        vec3i f = vec3i{};
         vector<string> face_splited;
         boost::algorithm::split(face_splited, *it, boost::is_any_of("/"));
-        f.v[i] = stoi(face_splited[0]);
-        f.vt[i] = !face_splited[1].empty() ? stoi(face_splited[1]) : -1;
-        f.vn[i] = !face_splited[2].empty() ? stoi(face_splited[2]) : -1;
+        f[0] = stoi(face_splited[0]);
+        f[1] = !face_splited[1].empty() ? stoi(face_splited[1]) : -1;
+        f[2] = !face_splited[2].empty() ? stoi(face_splited[2]) : -1;
+        faces->push_back(f);
     }
-    faces->push_back(f);
 }
 
 void obj_file_handler::parse_mtl_library(const vector<string> &strs) {

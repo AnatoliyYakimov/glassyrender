@@ -7,16 +7,17 @@
 
 
 #include <vector>
-#include "../../include/entities/model_objects/i_object.h"
-#include "../../include/entities/model_objects/polygonal_object.h"
+#include <vec.h>
+#include <memory>
 
 using namespace std;
+
 class obj_file_handler {
 private:
-    vector<vec3f>* vertices =  new vector<vec3f>();
-    vector<vec2f>* t_vertices =  new vector<vec2f>();
-    vector<vec3f>* n_vertices =  new vector<vec3f>();
-    vector<face>* faces =  new vector<face>();
+    typedef shared_ptr<vector<vec3f>> vec3_arrf;
+    typedef shared_ptr<vector<vec2f>> vec2_arrf;
+    typedef shared_ptr<vector<vec3i>> vec_arri;
+
 
     void parse_face(const vector<string> &strs);
 
@@ -33,17 +34,19 @@ private:
     void triangulate_polygon(const vector<string> &vector);
 
 public:
+    vec3_arrf vertices;
+    vec3_arrf n_vertices;
+    vec2_arrf t_vertices;
+    vec_arri faces;
 
-    obj_file_handler() = default;
-
-    ~obj_file_handler() {
-        delete vertices;
-        delete n_vertices;
-        delete t_vertices;
-        delete faces;
+    obj_file_handler() :
+            vertices(new vector<vec3f>()),
+            n_vertices(new vector<vec3f>()),
+            t_vertices(new vector<vec2f>()),
+            faces(new vector<vec3i>()) {
     }
 
-    vector<i_object*>* load(const string &file_path);
+    void load(const string &file_path);
 
 };
 
