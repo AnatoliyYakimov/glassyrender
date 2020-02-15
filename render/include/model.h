@@ -7,7 +7,7 @@
 
 #include <vector>
 #include "sphere.h"
-#include "../../Constants.h"
+#include <Constants.h>
 #include "i_light_source.h"
 
 class model {
