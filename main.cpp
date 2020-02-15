@@ -3,10 +3,13 @@
 #include <vector>
 #include <iostream>
 
-#include "Constants.h"
+#include <Constants.h>
 #include <scene3d.h>
 #include <polygonal_object.h>
 #include <obj_file_handler.h>
+#include <command_handler.h>
+
+using namespace std;
 
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -40,7 +43,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
     if (!register_window(hInstance, CLASS_NAME, &WndProc)) {
         return 1;
     }
-//    nanogui::init();
+
+    command_handler *handler = new command_handler(cout, cin);
+    handler->loop();
+
+
     HWND hWnd = create_window(hInstance, CLASS_NAME, WINDOW_NAME);
 
     scene.ambient_light = 0.1f;
