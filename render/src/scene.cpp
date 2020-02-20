@@ -42,8 +42,8 @@ boost::optional<pair<obj_sp, intersection>>
 }
 
 bool scene::any_collision(const vec3f &fromPoint, const vec3f &V, float t_min, float t_max) const {
-    for (const auto &sphere : objects) {
-        intersection*p = sphere->ray_intersection(fromPoint, V, t_min, t_max);
+    for (const auto &object : objects) {
+        intersection* p = object->ray_intersection(fromPoint, V, t_min, t_max);
         if (p != nullptr) {
             delete p;
             return true;

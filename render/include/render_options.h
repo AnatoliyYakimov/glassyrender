@@ -9,7 +9,7 @@ public:
         static render_options s;
         return s;
     }
-    float ambient_light = 0.2f;
+    float ambient_light = 0.1f;
     float gamma = 2.2;
     float camera_exposure = 1;
     int width = 1280;

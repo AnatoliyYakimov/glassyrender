@@ -24,13 +24,13 @@ int main() {
     render &r = render::get_instance();
     auto &lights = _scene.lights;
     lights.emplace_back(new vector_light_source{
-            2.0f, vec3f{1, 1, 1}, vec3f{5, -5, 5}});
+            4.0f, vec3f{1, 1, 1}, vec3f{5, -5, 5}});
     lights.emplace_back(new point_light_source{
-            10.0f, vec3f{1, 0, 0}, vec3f{1, 1, -1}});
+            10.0f, vec3f{1, 0.8f, 0.5f}, vec3f{10, 0, -20}});
     affine_transform at = {
-            1, 0, 0, 1,
-            0, 1, 0, -4,
-            0, 0, 1, -50,
+            1, 0, 0, 0,
+            0, 1, 0, -5,
+            0, 0, 1, -40,
             0, 0, 0, 1
     };
     render::get_instance().move_cam(at);
@@ -123,9 +123,15 @@ void initialize_scene2(objects_arr &spheres) {
 
     material_sp mat = std::make_shared<material>(albedo, rgh, ao, normal);
 
-    affine_transform at = affine_transform_factory::move(vec3f{0, 0, 0});
+    affine_transform at = affine_transform_factory::move(vec3f{-6 , 0, 0});
 
-    auto *s = new sphere(12.0f, mat);
+    auto *s = new sphere(6.0f, mat);
     s->apply(at);
     spheres.emplace_back(s);
+
+    auto at2 = affine_transform_factory::move(vec3f{6, 0, 0});
+
+    auto *s2 = new sphere(6.0f, mat);
+    s2->apply(at2);
+    spheres.emplace_back(s2);
 }
