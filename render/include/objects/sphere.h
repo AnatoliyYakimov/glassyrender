@@ -19,25 +19,19 @@ protected:
 public:
 
     sphere(float r,
-           i_rgb_texture *albedoMap,
-           i_monochrome_texture *roughnessMap,
-           i_rgb_texture *normalMap,
-           i_monochrome_texture *aoMap)
-            : i_object(albedoMap,
-                       roughnessMap,
-                       normalMap,
-                       aoMap),
+           const material_sp &_mat)
+            : i_object(_mat),
               R(r) {}
 
     sphere(const sphere &s) = default;
 
     [[nodiscard]] intersection *ray_intersection(const vec3f &from_point,
-                                                 const vec3f &v,
+                                                 const vec3f &dir,
                                                  const float &t_min,
                                                  const float &t_max) const override {
         vec3f OC = from_point - to_world * O;
-        float k1 = 2 * (v * v);
-        float k2 = 2 * (v * OC);
+        float k1 = 2 * (dir * dir);
+        float k2 = 2 * (dir * OC);
         float k3 = (OC * OC) - R * R;
         float d = k2 * k2 - 2 * k1 * k3;
         if (d < 0) {
@@ -55,28 +49,19 @@ public:
             } else {
                 min = b1 ? t1 : t2;
             }
-            vec3f p_world = from_point + min * v;
+            vec3f p_world = from_point + min * dir;
             vec3f p_local = to_local * p_world;
             vec3f p_n = p_local.normalized_copy();
             float x_t = 0.5 + atan2(p_n[0], p_n[2]) / (2 * M_PI);
             float y_t = 0.5 - asin(p_n[1]) / M_PI;
             vec2f p_texture = vec2f{x_t, y_t};
-            vec3f normal;
-            if (normal_map) {
-                normal = normal_map->texture_at_point(p_texture);
-            } else {
-                normal = (to_world * O - p_world).normalized_copy();
-            }
-            vec3f albedo = albedo_map->texture_at_point(p_texture);
-            float roughness = roughness_map->texture_at_point(p_texture);
-            float ao = ao_map->texture_at_point(p_texture);
+            vec3f normal = (to_world * O - p_world).normalize();
+            vec2f vt = vec2f{x_t, y_t};
             intersection *is =
                     new intersection(p_world,
-                                     min,
                                      normal,
-                                     albedo,
-                                     roughness,
-                                     ao);
+                                     vt,
+                                     min);
             return is;
         } else {
             return nullptr;

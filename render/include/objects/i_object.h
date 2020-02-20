@@ -5,48 +5,29 @@
 #ifndef GLASSYRENDER_I_OBJECT_H
 #define GLASSYRENDER_I_OBJECT_H
 
+#include <utility>
 #include <vector>
+#include <material.h>
 #include <affine_transform.h>
-#include <textures/i_rgb_texture.h>
-#include <textures/i_monochrome_texture.h>
+#include <textures/texture.h>
 
 class intersection {
 public:
-    vec3f intersection_point;
-    float distance;
-    vec3f normal;
-    vec3f albedo;
-    float roughness;
-    float ao;
-    float metalness;
-    vec3f frenel;
+    const vec3f intersection_point;
+    const vec3f normal;
+    const vec2f texture_coords;
+    const float distance;
 
     intersection(const vec3f &intersection_point,
-                 float distance,
                  const vec3f &normal,
-                 const vec3f &albedo,
-                 float roughness,
-                 float ao)
+                 const vec2f &texture_coords,
+                 const float distance)
             : intersection_point(intersection_point),
-              distance(distance),
               normal(normal),
-              albedo(albedo),
-              roughness(roughness),
-              metalness(1.0f - roughness),
-              frenel(metalness * albedo * 0.4),
-              ao(ao) {}
+              texture_coords(texture_coords),
+              distance(distance) {}
 
-    intersection(const intersection &is) :
-            intersection_point(is.intersection_point),
-            distance(is.distance),
-            normal(is.normal),
-            albedo(is.albedo),
-            roughness(is.roughness),
-            metalness(is.roughness),
-            frenel(is.frenel),
-            ao(is.ao) {}
-
-    intersection(const intersection *is) : intersection(*is) {}
+    intersection(const intersection &is) = default;
 
 };
 
@@ -54,32 +35,22 @@ class i_object {
 protected:
     affine_transform to_local;
     affine_transform to_world;
+    material_sp _material;
 public:
 
-    std::shared_ptr<i_rgb_texture> albedo_map;
-    std::shared_ptr<i_monochrome_texture> roughness_map;
-    std::shared_ptr<i_monochrome_texture> ao_map;
-    std::shared_ptr<i_rgb_texture> normal_map;
-
-    i_object()
-            : to_local(affine_transform::identity()),
-              to_world(affine_transform::identity()) {};
-
-    i_object(i_rgb_texture *albedo_map,
-             i_monochrome_texture *roughness_map,
-             i_rgb_texture *normal_map,
-             i_monochrome_texture *ao_map)
-            : albedo_map(albedo_map),
-              roughness_map(roughness_map), ao_map(ao_map),
-              normal_map(normal_map),
+    explicit i_object(material_sp mat)
+            : _material(move(mat)),
               to_local(affine_transform::identity()),
               to_world(affine_transform::identity()) {}
 
-    i_object(const i_object &o) = default;
 
     void apply(const affine_transform &at) {
         to_world = to_world * at;
         to_local = to_local * at.inverse();
+    }
+
+    [[nodiscard]] const material_sp &get_material() const {
+        return _material;
     }
 
     /**
@@ -95,5 +66,5 @@ public:
                      const float &t_max) const = 0;
 };
 
-
+typedef std::shared_ptr<i_object> obj_sp;
 #endif //GLASSYRENDER_I_OBJECT_H

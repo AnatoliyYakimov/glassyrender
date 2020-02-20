@@ -15,33 +15,34 @@ scene &scene::get_instance() {
 }
 
 
-intersection *
+
+boost::optional<pair<obj_sp, intersection>>
     scene::nearest_collision(const vec3f &fromPoint, const vec3f &V, float t_min, float t_max) const {
-    std::vector<intersection> intersections;
-    for (const auto object : *objects) {
+    std::vector<pair<obj_sp, intersection>> intersections;
+    for (const auto &object : objects) {
         intersection *is = object->ray_intersection(fromPoint, V, t_min, t_max);
         if (is == nullptr) {
             continue;
         }
-        intersections.emplace_back(is);
+        intersections.emplace_back(object, *is);
     }
     if (intersections.empty()) {
-        return nullptr;
+        return boost::none;
     }
-    const intersection *nearest = intersections.begin().base();
-    float d_min = nearest->distance;
-    for (const auto &item : intersections) {
-        float d = item.distance;
+    pair<obj_sp, intersection> *nearest = intersections.begin().base();
+    float d_min = nearest->second.distance;
+    for (auto &item : intersections) {
+        float d = item.second.distance;
         if (d < d_min) {
             nearest = &item;
             d_min = d;
         }
     }
-    return new intersection(*nearest);
+    return *nearest;
 }
 
 bool scene::any_collision(const vec3f &fromPoint, const vec3f &V, float t_min, float t_max) const {
-    for (const auto sphere : *objects) {
+    for (const auto &sphere : objects) {
         intersection*p = sphere->ray_intersection(fromPoint, V, t_min, t_max);
         if (p != nullptr) {
             delete p;

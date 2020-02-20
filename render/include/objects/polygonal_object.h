@@ -39,26 +39,15 @@ protected:
     unique_ptr <vector<vec2f>> t_vertices;
     unique_ptr <vec3f_arr> n_vertices;
     unique_ptr <vector<face>> faces;
-public:
-    polygonal_object(vec3f_arr *vertices,
-                     vector<vec2f> *tVertices,
-                     vec3f_arr *nVertices,
-                     vector<face> *faces)
-            : vertices(vertices), t_vertices(tVertices), n_vertices(nVertices),
-              faces(faces) {}
 
-    polygonal_object(i_rgb_texture *albedoMap,
-                     i_monochrome_texture *roughnessMap,
-                     i_rgb_texture *normalMap,
-                     i_monochrome_texture *aoMap,
+public:
+
+    polygonal_object(const material_sp &_mat,
                      vec3f_arr *vertices,
                      vector<vec2f> *tVertices,
                      vec3f_arr *nVertices,
                      vector<face> *faces)
-            : i_object(albedoMap,
-                       roughnessMap,
-                       normalMap,
-                       aoMap),
+            : i_object(_mat),
               vertices(vertices),
               t_vertices(tVertices),
               n_vertices(nVertices),
@@ -123,16 +112,14 @@ public:
         vec3f p_world = to_world * (o_local + v_local * min->d);
         const vec2f &vt = *(min->vt);
         const vec3f &normal = *(min->vn);
-        vec3f albedo = albedo_map->texture_at_point(vt);
-        float roughness = roughness_map->texture_at_point(vt);
-        float ao = ao_map->texture_at_point(vt);
+        vec3f albedo = _material->get_albedo()->texture_at_point(vt);
+        float roughness = _material->get_roughness()->texture_at_point(vt);
+        float ao = _material->get_ao()->texture_at_point(vt);
         return new intersection(
                 p_world,
-                min->d,
                 normal,
-                albedo,
-                roughness,
-                ao);
+                vt,
+                min->d);
     }
 
 private:

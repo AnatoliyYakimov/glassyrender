@@ -66,4 +66,5 @@ public:
     }
 };
 
+typedef std::shared_ptr<light> light_sp;
 #endif //GLASSYRENDER_LIGHT_H

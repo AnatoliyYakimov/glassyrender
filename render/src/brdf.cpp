@@ -19,8 +19,7 @@ BRDF::count_irradiance(const vec3f &p,
     float _G, _D;
     vec3f _F;
     const scene &s = scene::get_instance();
-    auto &lights = *s.lights;
-    for (const auto *light : lights) {
+    for (const auto &light : s.lights) {
         vec3f l = light->direction(p);
         if (s.any_collision(p, -l, eps, inf)) {
             continue;
