@@ -18,6 +18,7 @@ private:
     const float L = -0.5f;
     const float T = 0.5f;
     float divider = 1.0f;
+    float FOV;
 
     inline vec2f camera_to_viewport(const int &u, const int &v) {
         float x = L + u * divider;
@@ -25,16 +26,21 @@ private:
         return vec2f{x, y};
     }
 
-public:
-    UINT width;
-    UINT height;
     vec3f camera_pos;
     vec3f origin_pos;
-    float d;
+public:
 
-    viewport(int, int, float);
+    viewport(const float FOV) : camera_pos({0, 0, -FOV}),
+                                origin_pos({0,0,0}),
+                                to_world(affine_transform::identity()),
+                                FOV(FOV) {
+    }
 
     void recompute_size(int, int);
+
+    [[nodiscard]] const vec3f &get_camera_pos() const {
+        return camera_pos;
+    }
 
     void apply(const affine_transform &at);
 

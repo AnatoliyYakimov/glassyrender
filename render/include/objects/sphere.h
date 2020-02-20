@@ -8,9 +8,7 @@
 #include <utility>
 #include <memory>
 #include <vec.h>
-#include "i_object.h"
-#include "i_rgb_texture.h"
-#include "i_monochrome_texture.h"
+#include <objects/i_object.h>
 
 class sphere : public i_object {
 protected:

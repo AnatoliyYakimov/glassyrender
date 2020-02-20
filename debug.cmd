@@ -1,0 +1,1 @@
+exec .\cmake-build-debug\GlassyRender.exe

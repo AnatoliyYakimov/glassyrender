@@ -7,8 +7,8 @@
 
 #include <functional>
 #include <vec.h>
-#include "sphere.h"
-#include "model.h"
+#include <objects/sphere.h>
+#include <scene.h>
 
 class geometry_attenuation {
 public:
@@ -18,7 +18,7 @@ public:
 
 class normal_distribution {
 public:
-    virtual float D(const float &NdotH, float roughness) = 0;
+    virtual float D(const float &NdotH, const float roughness) = 0;
     virtual float operator()(const float &NdotH, const float &roughness) = 0;
 
 };
@@ -44,7 +44,7 @@ public:
      * @param v - направление наблюдателя
      * @param n - нормаль к поверхности
      * @param material - материл поверхности
-     * @param model - модель которую необходимо рендерить
+     * @param scene - сцена которую необходимо визуализировать
      * @return - цвет поврхности
      */
     vec3f count_irradiance(const vec3f &p,
@@ -53,8 +53,7 @@ public:
                            const vec3f &albedo,
                            const vec3f &frenel,
                            float roughness,
-                           float ao,
-                           const model &model);
+                           float ao);
 };
 
 

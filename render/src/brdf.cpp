@@ -2,7 +2,7 @@
 // Created by Yakimov on 01.11.2019.
 //
 
-#include "../include/brdf.h"
+#include <brdf.h>
 
 vec3f
 BRDF::count_irradiance(const vec3f &p,
@@ -11,18 +11,18 @@ BRDF::count_irradiance(const vec3f &p,
                        const vec3f &albedo,
                        const vec3f &frenel,
                        float roughness,
-                       float ao,
-                       const model &model) {
-    vec3f l;
+                       float ao) {
     vec3f irradiance = vec3f(0);
     vec3f Fdiffuse = albedo;
     float k = (roughness + 1) * (roughness + 1) / 8;
     float NdotH, NdotL, NdotV, VdotH;
     float _G, _D;
     vec3f _F;
-    for (const auto *light : model.lights) {
-        l = light->direction(p);
-        if (model.any_collision(p, -l, eps, inf)) {
+    const scene &s = scene::get_instance();
+    auto &lights = *s.lights;
+    for (const auto *light : lights) {
+        vec3f l = light->direction(p);
+        if (s.any_collision(p, -l, eps, inf)) {
             continue;
         }
         vec3f h = (l + v).normalized_copy();

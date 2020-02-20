@@ -148,6 +148,8 @@ typedef vec<2, float> vec2f;
 typedef vec<3, int> vec3i;
 typedef vec<2, int> vec2i;
 
+typedef std::vector<vec3f> vec3f_arr;
+
 
 template<size_t dim, typename number_t>
 inline COLORREF vec<dim,number_t>::get_color_ref() {

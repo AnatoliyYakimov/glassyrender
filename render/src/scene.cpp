@@ -3,13 +3,22 @@
 //
 
 #include <algorithm>
-#include "../include/model.h"
+#include <scene.h>
+
+scene *scene::instance = nullptr;
+
+scene &scene::get_instance() {
+    if (scene::instance == nullptr) {
+        scene::instance = new scene();
+    }
+    return *instance;
+}
 
 
 intersection *
-    model::nearest_collision(const vec3f &fromPoint, const vec3f &V, float t_min, float t_max) const {
+    scene::nearest_collision(const vec3f &fromPoint, const vec3f &V, float t_min, float t_max) const {
     std::vector<intersection> intersections;
-    for (const auto object : objects) {
+    for (const auto object : *objects) {
         intersection *is = object->ray_intersection(fromPoint, V, t_min, t_max);
         if (is == nullptr) {
             continue;
@@ -31,8 +40,8 @@ intersection *
     return new intersection(*nearest);
 }
 
-bool model::any_collision(const vec3f &fromPoint, const vec3f &V, float t_min, float t_max) const {
-    for (const auto sphere : objects) {
+bool scene::any_collision(const vec3f &fromPoint, const vec3f &V, float t_min, float t_max) const {
+    for (const auto sphere : *objects) {
         intersection*p = sphere->ray_intersection(fromPoint, V, t_min, t_max);
         if (p != nullptr) {
             delete p;
@@ -41,4 +50,7 @@ bool model::any_collision(const vec3f &fromPoint, const vec3f &V, float t_min, f
     }
     return false;
 }
+
+
+
 

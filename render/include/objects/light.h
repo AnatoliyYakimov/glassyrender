@@ -2,20 +2,20 @@
 // Created by Yakimov on 13.10.2019.
 //
 
-#ifndef GLASSYRENDER_I_LIGHT_SOURCE_H
-#define GLASSYRENDER_I_LIGHT_SOURCE_H
+#ifndef GLASSYRENDER_LIGHT_H
+#define GLASSYRENDER_LIGHT_H
 
 #include "sphere.h"
 
-class i_light_source {
+class light {
 protected:
     float intensity;
     vec3f color = vec3f(1);
 
-    i_light_source() = default;
+    light() = default;
 
-    explicit i_light_source(float i) : intensity(i) {}
-    explicit i_light_source(float i, const vec3f &color) : intensity(i), color(color) {}
+    explicit light(float i) : intensity(i) {}
+    explicit light(float i, const vec3f &color) : intensity(i), color(color) {}
 
 public:
 
@@ -26,11 +26,11 @@ public:
 /**
  * Источник света, находящийся в определённой точке мирового пространства.
  */
-class point_light_source : public i_light_source {
+class point_light_source : public light {
 private:
     vec3f L;
 public:
-    explicit point_light_source(float i, const vec3f &color, const vec3f &p) : i_light_source(+i, color), L(p) {}
+    explicit point_light_source(float i, const vec3f &color, const vec3f &p) : light(+i, color), L(p) {}
 
     [[nodiscard]] vec3f count_impact(const vec3f &N, const vec3f &p) const override {
         vec3f LP = (p - L).normalized_copy();
@@ -49,11 +49,11 @@ public:
 /**
  * Бесконечноудалённый от сцены источник света, представляется в виде вектора.
  */
-class vector_light_source : public i_light_source {
+class vector_light_source : public light {
 private:
     vec3f L;
 public:
-    explicit vector_light_source(float i, const vec3f &color, const vec3f &l) : i_light_source(+i, color), L(
+    explicit vector_light_source(float i, const vec3f &color, const vec3f &l) : light(+i, color), L(
             l.normalized_copy()) {}
 
     [[nodiscard]] vec3f count_impact(const vec3f &N, const vec3f &p) const override {
@@ -66,4 +66,4 @@ public:
     }
 };
 
-#endif //GLASSYRENDER_I_LIGHT_SOURCE_H
+#endif //GLASSYRENDER_LIGHT_H

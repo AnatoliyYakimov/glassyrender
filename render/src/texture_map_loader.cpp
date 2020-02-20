@@ -3,9 +3,9 @@
 //
 
 #include <tuple>
-#include "texture_map_loader.h"
+#include <textures/texture_map_loader.h>
 
-std::tuple<std::vector<vec3f> *, int, int>
+std::tuple<vec3f_arr *, int, int>
 texture_map_loader::load_tga_rgb(const std::string &file_path, bool apply_gamma, float gamma) {
     tga::TGA tga;
     tga.Load(file_path);
@@ -14,7 +14,7 @@ texture_map_loader::load_tga_rgb(const std::string &file_path, bool apply_gamma,
     uint32_t k;
     const int width = tga.GetWidth();
     const int height = tga.GetHeight();
-    auto* res = new std::vector<vec3f>(width * height);
+    auto* res = new vec3f_arr(width * height);
     for (uint16_t i = 0; i < height; i++) {
         for (uint16_t j = 0; j < width; j++) {
             k = (j + i * width) * 3;

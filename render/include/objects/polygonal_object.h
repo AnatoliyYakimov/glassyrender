@@ -6,9 +6,11 @@
 #define GLASSYRENDER_POLYGONAL_OBJECT_H
 
 #include <memory>
-#include <i_object.h>
+#include <objects/i_object.h>
 #include <vector_utils.h>
-using namespace std;
+
+using std::unique_ptr;
+using std::vector;
 
 class face {
 public:
@@ -32,14 +34,15 @@ public:
 
 class polygonal_object : public i_object {
 protected:
-    unique_ptr <vector<vec3f>> vertices;
+
+    unique_ptr <vec3f_arr> vertices;
     unique_ptr <vector<vec2f>> t_vertices;
-    unique_ptr <vector<vec3f>> n_vertices;
+    unique_ptr <vec3f_arr> n_vertices;
     unique_ptr <vector<face>> faces;
 public:
-    polygonal_object(vector<vec3f> *vertices,
+    polygonal_object(vec3f_arr *vertices,
                      vector<vec2f> *tVertices,
-                     vector<vec3f> *nVertices,
+                     vec3f_arr *nVertices,
                      vector<face> *faces)
             : vertices(vertices), t_vertices(tVertices), n_vertices(nVertices),
               faces(faces) {}
@@ -48,9 +51,9 @@ public:
                      i_monochrome_texture *roughnessMap,
                      i_rgb_texture *normalMap,
                      i_monochrome_texture *aoMap,
-                     vector<vec3f> *vertices,
+                     vec3f_arr *vertices,
                      vector<vec2f> *tVertices,
-                     vector<vec3f> *nVertices,
+                     vec3f_arr *nVertices,
                      vector<face> *faces)
             : i_object(albedoMap,
                        roughnessMap,

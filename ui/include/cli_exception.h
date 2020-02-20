@@ -7,13 +7,12 @@
 #include <vector>
 #include <string>
 
-using namespace std;
-
+using std::string;
+using std::exception;
 
 class cli_exception : private exception {
 public:
     enum error_code {
-        EXIT,
         INVALID_ARGS,
         INVALID_COMMAND,
         OTHER
@@ -22,13 +21,11 @@ public:
     const error_code code;
 
     explicit cli_exception(error_code code) : code(code) {}
+    cli_exception(error_code code, exception &e) : exception(e), code(code) { }
 
     string get_message() {
         string description;
         switch (code) {
-            case EXIT:
-                description = "User decided to exit";
-                break;
             case INVALID_ARGS:
                 description = "Invalid arguments for command";
                 break;

@@ -10,11 +10,13 @@
 #include <vec.h>
 #include <memory>
 
-using namespace std;
+using std::shared_ptr;
+using std::vector;
+using std::string;
 
 class obj_file_handler {
 private:
-    typedef shared_ptr<vector<vec3f>> vec3_arrf;
+    typedef shared_ptr<vec3f_arr> vec3_arrf;
     typedef shared_ptr<vector<vec2f>> vec2_arrf;
     typedef shared_ptr<vector<vec3i>> vec_arri;
 
@@ -40,8 +42,8 @@ public:
     vec_arri faces;
 
     obj_file_handler() :
-            vertices(new vector<vec3f>()),
-            n_vertices(new vector<vec3f>()),
+            vertices(new vec3f_arr()),
+            n_vertices(new vec3f_arr()),
             t_vertices(new vector<vec2f>()),
             faces(new vector<vec3i>()) {
     }

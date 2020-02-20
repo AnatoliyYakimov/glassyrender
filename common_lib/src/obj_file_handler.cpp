@@ -10,6 +10,10 @@ void obj_file_handler::load(const std::string &file_path) {
     //TODO генерировать исключения при некорректном файле
     std::ifstream is(file_path);
 
+    if (!is.is_open()) {
+        throw std::invalid_argument(file_path);
+    }
+
     while (!is.eof()) {
         char* str = new char[128];
         is.getline(str, 128, '\n');

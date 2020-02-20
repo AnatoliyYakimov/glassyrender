@@ -7,9 +7,8 @@
 
 #include <vector>
 #include <affine_transform.h>
-#include "i_rgb_texture.h"
-#include "i_monochrome_texture.h"
-
+#include <textures/i_rgb_texture.h>
+#include <textures/i_monochrome_texture.h>
 
 class intersection {
 public:

@@ -8,7 +8,7 @@
 #include <memory>
 #include <tga.h>
 #include <color_utils.h>
-#include <texture_map_loader.h>
+#include <textures/texture_map_loader.h>
 
 class i_rgb_texture {
 public:
@@ -31,7 +31,7 @@ class mapped_rgb_texture : public i_rgb_texture {
 protected:
     int width = -1;
     int height = -1;
-    std::shared_ptr<std::vector<vec3f>> texture_map;
+    std::shared_ptr<vec3f_arr> texture_map;
 public:
     explicit mapped_rgb_texture(std::string &file_path, bool apply_gamma = false, float gamma = 1.0f) {
         auto[data, w, h] = texture_map_loader::load_tga_rgb(file_path, apply_gamma, gamma);
