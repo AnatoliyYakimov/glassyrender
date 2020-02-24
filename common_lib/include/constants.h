@@ -5,8 +5,6 @@
 #ifndef GLASSYRENDER_CONSTANTS_H
 #define GLASSYRENDER_CONSTANTS_H
 
-#define DEFAULT_HEIGHT 720
-#define DEFAULT_WIDTH 1280
 #define inf std::numeric_limits<float>::infinity()
 #define eps 0.0001f
 

@@ -149,6 +149,8 @@ typedef vec<3, int> vec3i;
 typedef vec<2, int> vec2i;
 
 typedef std::vector<vec3f> vec3f_arr;
+typedef std::vector<vec3i> vec3i_arr;
+typedef std::vector<vec2f> vec2f_arr;
 
 
 template<size_t dim, typename number_t>

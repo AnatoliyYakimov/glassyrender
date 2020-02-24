@@ -31,12 +31,24 @@ public:
 
 };
 
+class obj_file_handler;
+
 class i_object {
 protected:
     affine_transform to_local;
     affine_transform to_world;
     material_sp _material;
 public:
+
+    i_object() : _material(nullptr),
+                 to_local(affine_transform::identity()),
+                 to_world(affine_transform::identity()) {}
+
+    i_object(const i_object &obj) = delete;
+
+    i_object(i_object &&obj) : _material(move(obj._material)),
+                               to_local(obj.to_local),
+                               to_world(obj.to_world) {}
 
     explicit i_object(material_sp mat)
             : _material(move(mat)),
@@ -47,6 +59,14 @@ public:
     void apply(const affine_transform &at) {
         to_world = to_world * at;
         to_local = to_local * at.inverse();
+    }
+
+    virtual bool valid() {
+        return (bool) _material;
+    }
+
+    void set_material(const material_sp &material) {
+        _material = material;
     }
 
     [[nodiscard]] const material_sp &get_material() const {
