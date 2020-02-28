@@ -5,7 +5,7 @@
 #ifndef GLASSYRENDER_AFFINE_TRANSFORM_H
 #define GLASSYRENDER_AFFINE_TRANSFORM_H
 
-#include <matrix.h>
+#include <math/matrix.h>
 #include <cmath>
 
 typedef matrix<4, 4, float> affine_transform;

@@ -21,7 +21,6 @@ private:
     number_t coords[dim];
 
 public:
-
     vec() = default;
 
     vec(const vec &v);
@@ -129,6 +128,25 @@ public:
 
     vec<dim, number_t> operator-() const {
         return -1.0 * vec<dim, number_t>(*this);
+    }
+
+    const number_t &x() const {
+        return coords[0];
+    }
+    const number_t &y() const {
+        return coords[1];
+    }
+    const number_t &z() const {
+        return coords[2];
+    }
+    const number_t &r() const {
+        return coords[0];
+    }
+    const number_t &g() const {
+        return coords[1];
+    }
+    const number_t &b() const {
+        return coords[2];
     }
 
     friend std::ostream &operator<<(std::ostream &os, const vec &vec) {

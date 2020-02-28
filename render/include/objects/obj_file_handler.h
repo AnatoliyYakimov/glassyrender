@@ -7,7 +7,7 @@
 
 
 #include <vector>
-#include <vec.h>
+#include <math/vec.h>
 #include <memory>
 #include <objects/polygonal_object.h>
 

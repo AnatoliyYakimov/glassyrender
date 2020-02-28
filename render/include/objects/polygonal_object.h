@@ -8,7 +8,7 @@
 #include <memory>
 #include <utility>
 #include <objects/i_object.h>
-#include <vector_utils.h>
+#include <math/vector_utils.h>
 
 using std::unique_ptr;
 using std::vector;

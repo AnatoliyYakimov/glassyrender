@@ -7,7 +7,7 @@
 
 #include <utility>
 #include <memory>
-#include <vec.h>
+#include <math/vec.h>
 #include <objects/i_object.h>
 
 class sphere : public i_object {

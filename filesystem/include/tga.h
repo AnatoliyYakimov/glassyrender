@@ -6,6 +6,7 @@
 #include <cstdint>
 #include <string>
 #include <fstream>
+#include <memory.h>
 
 /*!
 * @file tga.h

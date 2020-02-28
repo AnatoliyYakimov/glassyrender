@@ -7,8 +7,8 @@
 
 
 #include <functional>
-#include <affine_transform.h>
-#include <vector_utils.h>
+#include <math/affine_transform.h>
+#include <math/vector_utils.h>
 
 class viewport {
 private:

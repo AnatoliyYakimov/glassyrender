@@ -7,11 +7,12 @@
 #include <vector>
 #include <string>
 #include <memory>
-#include <cli_exception.h>
 #include <filesystem>
-#include <abstract_image.h>
-#include <image.hpp>
+#include <cli_exception.h>
+#include <basic_image.h>
 #include <render.h>
+#include <png_utils.h>
+#include <image.hpp>
 
 using std::string;
 using std::vector;
@@ -66,7 +67,7 @@ public:
         if (args.size() < 2) {
             throw cli_exception(cli_exception::error_code::INVALID_ARGS);
         }
-        auto it = args.begin()++;
+        auto it = ++args.begin();
         const string &file_path = *it;
         string file_name = "test.png";
         if (++it != args.end()){
@@ -78,9 +79,9 @@ public:
             path.assign(".");
         }
         try {
-            abstract_image img = render::get_instance().render_image();
-            png::image<png::rgb_pixel_16>* png = img.to_png16();
-            png->write("test.png");
+            auto img = render::get_instance().render_image();
+            png::image<png::rgb_pixel_16>* png = png_utils::to_16bit(img);
+            png->write(file_name);
             os << "Done!";
             os.flush();
             delete png;

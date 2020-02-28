@@ -14,27 +14,19 @@ render &render::get_instance()  {
 }
 
 void render::recompute_size() {
-    frame_buffer.reserve(opts.width * opts.height);
+    frame_buffer.resize(opts.width * opts.height);
     _viewport->recompute_size(opts.width, opts.height);
 }
 
 
-abstract_image render::render_image() {
+image_rgb render::render_image() {
     recompute_size();
     const int H = opts.height;
     const int W = opts.width;
     render_scene();
     apply_tone_mapping();
     apply_gamma_correction();
-    std::vector<rgb_pixel> data(W * H);
-    for (int u = 0; u < W; u++) {
-        for (int v = 0; v < H; v++) {
-            int pos = v + u * H;
-            vec3f rgb = frame_buffer[pos];
-            data[pos] = rgb_pixel(rgb[0], rgb[1], rgb[2]);
-        }
-    }
-    return std::move(abstract_image(std::move(data), W, H));
+    return image_rgb(frame_buffer, W, H);
 }
 
 void render::render_scene() {
@@ -58,9 +50,9 @@ vec3f render::trace_ray(const vec3f &from_point, const vec3f &v) {
     const auto &is = opt.value().second;
     const vec3f &p = is.intersection_point;
     const vec2f &vt = is.texture_coords;
-    vec3f albedo = mat->get_albedo()->texture_at_point(vt);
-    float ao = mat->get_ao()->texture_at_point(vt);
-    float roughness = mat->get_roughness()->texture_at_point(vt);
+    vec3f albedo = mat->get_albedo()->pixel_at(vt);
+    float ao = mat->get_ao()->pixel_at(vt);
+    float roughness = mat->get_roughness()->pixel_at(vt);
     //TODO Разобраться с Френелем
     vec3f frenel = albedo * (1 - roughness) * 0.4;
     vec3f _brdf_irradiance = brdf.count_irradiance(

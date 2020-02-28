@@ -8,8 +8,8 @@
 #include <utility>
 #include <vector>
 #include <material.h>
-#include <affine_transform.h>
-#include <textures/texture.h>
+#include <math/affine_transform.h>
+#include <basic_image.h>
 
 class intersection {
 public:

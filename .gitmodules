@@ -1,4 +1,4 @@
-[submodule "common_lib/ext/yaml-cpp"]
-	path = common_lib/ext/yaml-cpp
+[submodule "filesystem/ext/yaml-cpp"]
+	path = filesystem/ext/yaml-cpp
 	url = https://github.com/jbeder/yaml-cpp.git
 

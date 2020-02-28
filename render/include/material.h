@@ -3,9 +3,10 @@
 #ifndef GLASSYRENDER_MATERIAL_H
 #define GLASSYRENDER_MATERIAL_H
 
-#include <textures/texture.h>
-
 #include <utility>
+#include <memory>
+
+#include <texture.h>
 
 using std::shared_ptr;
 using std::move;
