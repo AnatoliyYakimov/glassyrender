@@ -11,17 +11,22 @@
 #include <math/vec.h>
 #include <basic_image.h>
 
-template <typename  T>
+template<typename T>
 class tga_utils {
 public:
-    static image_rgb load_tga(const std::string &file_path, bool apply_gamma = false, float gamma = 1.0f);
+    static image_rgb load_tga(const std::string &file_path,
+                              bool apply_gamma = false,
+                              float gamma = 1.0f);
 };
 
-template <>
+template<>
 class tga_utils<vec3f> {
 public:
-    static image_rgb load(const std::string &file_path, bool apply_gamma = false, float gamma = 1.0f) {
+    static image_rgb load(const std::string &file_path,
+                          bool apply_gamma = false,
+                          float gamma = 1.0f) {
         tga::TGA tga;
+
         tga.Load(file_path);
         const uint8_t *data = tga.GetData();
         float r, g, b;
@@ -47,10 +52,12 @@ public:
     }
 };
 
-template <>
+template<>
 class tga_utils<float> {
 public:
-    static image_mono load(const std::string &file_path, bool apply_gamma = false, float gamma = 1.0f) {
+    static image_mono load(const std::string &file_path,
+                           bool apply_gamma = false,
+                           float gamma = 1.0f) {
         tga::TGA tga;
         tga.Load(file_path);
         const uint8_t *data = tga.GetData();
@@ -72,8 +79,6 @@ public:
         return image_mono(move(res), width, height);
     }
 };
-
-
 
 
 #endif //GLASSYRENDER_TGA_UTILS_H

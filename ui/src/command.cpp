@@ -22,4 +22,9 @@ bool render_command::_static_init() noexcept {
 
 bool render_command::_init = render_command::_static_init();
 
+bool load_scene_command::_static_init() noexcept {
+    command::registry->push_back(new load_scene_command("scene"));
+    return false;
+}
 
+bool load_scene_command::_init = load_scene_command::_static_init();

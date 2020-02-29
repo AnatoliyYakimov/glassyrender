@@ -19,7 +19,6 @@ void initialize_scene(objects_arr &spheres);
 
 
 int main() {
-    scene_loader::load(R"(C:\Users\Yakimov\CLionProjects\GlassyRender\resources\scene.yaml)");
     scene & _scene = scene::get_instance();
     render &r = render::get_instance();
     auto &lights = _scene.lights;
@@ -42,14 +41,14 @@ int main() {
 }
 
 void initialize_scene(objects_arr &spheres) {
-    std::string path = R"(C:\Users\Yakimov\CLionProjects\GlassyRender\resources\[2K]PavingStones36\PavingStones36_col.tga)";
+    std::string path = R"(C:\Users\Yakimov\CLionProjects\GlassyRender\resources\PavingStones\PavingStones36_col.tga)";
     auto albedo = tga_utils<vec3f>::load(path, true, 2.2f);
-    path = R"(C:\Users\Yakimov\CLionProjects\GlassyRender\resources\[2K]PavingStones36\PavingStones36_AO.tga)";
+    path = R"(C:\Users\Yakimov\CLionProjects\GlassyRender\resources\PavingStones\PavingStones36_AO.tga)";
     auto ao = tga_utils<float>::load(path, true, 2.2f);
-    path = R"(C:\Users\Yakimov\CLionProjects\GlassyRender\resources\[2K]PavingStones36\PavingStones36_nrm.tga)";
+    path = R"(C:\Users\Yakimov\CLionProjects\GlassyRender\resources\PavingStones\PavingStones36_nrm.tga)";
     auto normal =tga_utils<vec3f>::load(path, true, 2.2f);
 
-    path = R"(C:\Users\Yakimov\CLionProjects\GlassyRender\resources\[2K]PavingStones36\PavingStones36_rgh.tga)";
+    path = R"(C:\Users\Yakimov\CLionProjects\GlassyRender\resources\PavingStones\PavingStones36_rgh.tga)";
     auto rgh = tga_utils<float>::load(path, true, 2.2f);
 
     auto a_sp = std::make_shared<mapped_texture_rgb>(std::move(albedo));

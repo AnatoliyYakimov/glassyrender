@@ -8,11 +8,11 @@
 #include <string>
 #include <memory>
 #include <filesystem>
-#include <cli_exception.h>
 #include <basic_image.h>
 #include <render.h>
 #include <png_utils.h>
 #include <image.hpp>
+#include <scene_loader.h>
 
 using std::string;
 using std::vector;
@@ -47,6 +47,7 @@ private:
     static bool _static_init() noexcept;
 
     explicit exit_command(const string &signature) : command(signature) {}
+
 public:
 
     void exec(const vector<string> &args, ostream &os) override {
@@ -61,16 +62,17 @@ private:
     static bool _static_init() noexcept;
 
     explicit render_command(const string &signature) : command(signature) {}
+
 public:
 
     void exec(const vector<string> &args, ostream &os) override {
         if (args.size() < 2) {
-            throw cli_exception(cli_exception::error_code::INVALID_ARGS);
+            throw std::runtime_error("Too few arguments fro command");
         }
         auto it = ++args.begin();
         const string &file_path = *it;
-        string file_name = "test.png";
-        if (++it != args.end()){
+        string file_name = "test";
+        if (++it != args.end()) {
             file_name = *it;
 
         }
@@ -78,21 +80,44 @@ public:
         if (path.empty()) {
             path.assign(".");
         }
+        png::image<png::rgb_pixel_16> *png = nullptr;
         try {
             auto img = render::get_instance().render_image();
-            png::image<png::rgb_pixel_16>* png = png_utils::to_16bit(img);
-            png->write(file_name);
+            png = png_utils::to_16bit(img);
+            png->write(file_name + ".png");
             os << "Done!";
             os.flush();
+        } catch (std::exception &e) {
             delete png;
-        } catch (exception &e) {
-            throw cli_exception(cli_exception::OTHER, e);
+            throw e;
         }
-
-
+        delete png;
     }
 
     ~render_command() override = default;
+};
+
+class load_scene_command : public command {
+private:
+    static bool _init;
+
+    static bool _static_init() noexcept;
+
+    explicit load_scene_command(const string &signature) : command(signature) {}
+
+public:
+
+    void exec(const vector<string> &args, ostream &os) override {
+        if (args.size() < 2) {
+            throw std::runtime_error("Too few arguments fro command");
+        }
+        auto it = ++args.begin();
+        const string &file_path = *it;
+        scene_loader::load(file_path);
+        os << "Done!";
+        os.flush();
+
+    }
 };
 
 #endif //GLASSYRENDER_COMMAND_H

@@ -36,8 +36,9 @@ public:
                 if (cmd->is_signature(signature)) {
                     try {
                         cmd->exec(args, os);
-                    } catch (exception &e) {
-                        os << e.what();
+                    } catch (std::exception &e) {
+                        string msg = e.what();
+                        os << msg;
                     }
                     break;
                 }
