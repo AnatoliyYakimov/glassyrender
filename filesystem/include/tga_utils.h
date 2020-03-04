@@ -27,7 +27,13 @@ public:
                           float gamma = 1.0f) {
         tga::TGA tga;
 
-        tga.Load(file_path);
+        try {
+            tga.Load(file_path);
+        } catch (std::exception &e) {
+            string str = "Error while loading TGA. Details:\n\t";
+            str += e.what();
+            throw std::runtime_error(str);
+        }
         const uint8_t *data = tga.GetData();
         float r, g, b;
         uint32_t k, p;
@@ -59,7 +65,13 @@ public:
                            bool apply_gamma = false,
                            float gamma = 1.0f) {
         tga::TGA tga;
-        tga.Load(file_path);
+        try {
+            tga.Load(file_path);
+        } catch (std::exception &e) {
+            string str = "Error while loading TGA. Details:\n\t";
+            str += e.what();
+            throw std::runtime_error(str);
+        }
         const uint8_t *data = tga.GetData();
         uint32_t k, p;
         const int width = tga.GetWidth();

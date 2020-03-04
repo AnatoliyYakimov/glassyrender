@@ -19,22 +19,20 @@ void initialize_scene(objects_arr &spheres);
 
 
 int main() {
-    scene & _scene = scene::get_instance();
-    render &r = render::get_instance();
-    auto &lights = _scene.lights;
-    lights.emplace_back(new vector_light_source{
-            5.0f, vec3f{1, 1, 1}, vec3f{0, -1, 1}});
-    lights.emplace_back(new point_light_source{
-            5.0f, vec3f{1, 0.8f, 0.5f}, vec3f{10, 0, -20}});
-    affine_transform at = {
-            1, 0, 0, 0,
-            0, 1, 0, 0,
-            0, 0, 1, -1,
-            0, 0, 0, 1
-    };
-    render::get_instance().move_cam(at);
-    auto &spheres = scene::get_instance().objects;
-//    initialize_scene(spheres);
+    string resources = "resources/";
+    try {
+        scene_loader::load(resources + "scene.yaml");
+        cout << "Scene autoloaded successfully";
+    } catch (std::exception &e) {
+        cout << "Scene autoload fail";
+    }
+    cout << std::endl;
+    try {
+        options_loader::load(resources + "options.yaml");
+        cout << "Options autoloaded successfully";
+    } catch (std::exception &e) {
+        cout << "Options autoload fail";
+    }
 
     command_handler *handler = new command_handler(std::cout, std::cin);
     handler->loop();

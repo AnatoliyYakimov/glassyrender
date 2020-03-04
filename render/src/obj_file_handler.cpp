@@ -10,7 +10,9 @@ shared_ptr<polygonal_object> obj_file_handler::load(const std::string &file_path
     std::ifstream is(file_path);
 
     if (!is.is_open()) {
-        throw std::invalid_argument(file_path);
+        string str = "Can`t open .obj file ";
+        str += file_path;
+        throw std::invalid_argument(str);
     }
 
     vec3f_arr vertices;

@@ -19,18 +19,38 @@ public:
 
     static void load(const string &str) {
         if (str.empty()) {
-            throw std::invalid_argument(str);
+            throw std::invalid_argument("Path cannot be empty");
         }
         auto p = path(str).string();
-        const YAML::Node node = YAML::LoadFile(str);
+        try {
+            const YAML::Node node = YAML::LoadFile(str);
 
-        std::map<string, material_sp> materials;
-        std::map<string, affine_transform> transforms;
-        auto prefix = std::filesystem::path(str).parent_path().string() + "\\";
 
-        if (node["materials"].IsDefined()) {
-            load_materials(node["materials"], materials, prefix);
-            scene::get_instance().objects = std::move(load_objects(node["objects"], materials, prefix));
+            std::map<string, material_sp> materials;
+            std::map<string, affine_transform> transforms;
+            auto prefix =
+                    std::filesystem::path(str).parent_path().string() + "\\";
+
+            if (node["materials"].IsDefined()){
+                load_materials(node["materials"], materials, prefix);
+            }
+            if (node["objects"].IsDefined()){
+                scene::get_instance().objects = std::move(
+                        load_objects(node["objects"], materials, prefix)
+                );
+            }
+            if (node["camera"]["transform"].IsDefined()) {
+                render::get_instance().move_cam(load_transform(node["camera"]["transform"]));
+            }
+            if (node["lights"].IsDefined()) {
+                scene::get_instance().lights = std::move(
+                        load_lights(node["lights"])
+                );
+            }
+        } catch (std::exception &e) {
+            string str = "Error while loading scene. Details:\n\t";
+            str += e.what();
+            throw std::runtime_error(str);
         }
     }
 
@@ -45,7 +65,9 @@ private:
 
 
     static objects_arr
-    load_objects(const YAML::Node &nodes, std::map<string, material_sp> &map, const string &prefix) {
+    load_objects(const YAML::Node &nodes,
+                 std::map<string, material_sp> &map,
+                 const string &prefix) {
         objects_arr objects;
         obj_sp obj = obj_sp(nullptr);
         for (auto &node : nodes) {
@@ -68,7 +90,9 @@ private:
     }
 
     static void
-    load_materials(const YAML::Node &nodes, std::map<string, material_sp> &map, const string &prefix) {
+    load_materials(const YAML::Node &nodes,
+                   std::map<string, material_sp> &map,
+                   const string &prefix) {
         for (auto &node : nodes) {
             auto name = node["name"].as<string>();
             auto albedo = parse_tex<vec3f>(node["albedo"], prefix);
@@ -80,8 +104,27 @@ private:
         }
     }
 
+    static lights_arr
+    load_lights(const YAML::Node &nodes) {
+        lights_arr lights;
+        for (auto &node : nodes) {
+            auto type = node["type"].as<string>();
+            auto col = node["color"].as<vec3f>();
+            auto intens = node["intensity"].as<float>();
+            if (type == "vector") {
+                auto direction = node["direction"].as<vec3f>();
+                lights.emplace_back(new vector_light_source(intens, col, direction));
+            } else if (type == "point") {
+                auto point = node["point"].as<vec3f>();
+                lights.emplace_back(new point_light_source(intens, col, point));
+            }
+        }
+        return lights;
+    }
+
     template<typename T>
-    static shared_ptr<i_texture<T>> parse_tex(const YAML::Node &node, const string &prefix) {
+    static shared_ptr<i_texture<T>>
+    parse_tex(const YAML::Node &node, const string &prefix) {
         auto type = node["type"].as<string>();
         if (type == "uniform") {
             T value = node["value"].as<T>();
@@ -110,12 +153,12 @@ private:
 namespace YAML {
     template<>
     struct convert<affine_transform> {
-         Node encode(const affine_transform& rhs) {
+        Node encode(const affine_transform &rhs) {
             Node node;
             return node;
         }
 
-        static bool decode(const Node& node, affine_transform& rhs) {
+        static bool decode(const Node &node, affine_transform &rhs) {
             string type = node["type"].as<string>();
             if (type == "rotate") {
                 auto angle = node["angle"].as<float>();
@@ -150,7 +193,7 @@ namespace YAML {
 
     template<>
     struct convert<vec3f> {
-        static Node encode(const vec3f& rhs) {
+        static Node encode(const vec3f &rhs) {
             Node node;
             node.push_back(rhs[0]);
             node.push_back(rhs[1]);
@@ -158,8 +201,8 @@ namespace YAML {
             return node;
         }
 
-        static bool decode(const Node& node, vec3f& rhs) {
-            if(!node.IsSequence() || node.size() != 3) {
+        static bool decode(const Node &node, vec3f &rhs) {
+            if (!node.IsSequence() || node.size() != 3) {
                 return false;
             }
 

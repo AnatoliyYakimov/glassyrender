@@ -38,8 +38,9 @@ public:
                         cmd->exec(args, os);
                     } catch (std::exception &e) {
                         string msg = e.what();
-                        os << msg;
+                        os << "Exception: \"" << msg << "\"";
                     }
+                    os.flush();
                     break;
                 }
             }

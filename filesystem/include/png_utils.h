@@ -4,6 +4,7 @@
 #define GLASSYRENDER_PNG_UTILS_H
 
 #include <image.hpp>
+#include <memory>
 #include <basic_image.h>
 
 class png_utils {
@@ -21,11 +22,11 @@ public:
         return png::rgb_pixel_16{r, g, b};
     }
 
-    static png::image<png::rgb_pixel>* to_8bit(const image_rgb &img) {
+    static std::shared_ptr<png::image<png::rgb_pixel>> to_8bit(const image_rgb &img) {
         int width = img.get_width();
         int height = img.get_height();
         auto data = img.get_data();
-        auto *png = new png::image<png::rgb_pixel>(width, height);
+        auto png = std::make_shared<png::image<png::rgb_pixel>>(width, height);
         auto &buf = png->get_pixbuf();
         for (int i = 0; i < width; ++i) {
             for (int j = 0; j < height; ++j) {
@@ -35,11 +36,11 @@ public:
         return png;
     }
 
-    static png::image<png::rgb_pixel_16>* to_16bit(const image_rgb &img) {
+    static std::shared_ptr<png::image<png::rgb_pixel_16>> to_16bit(const image_rgb &img) {
         int width = img.get_width();
         int height = img.get_height();
         auto data = img.get_data();
-        auto *png = new png::image<png::rgb_pixel_16>(width, height);
+        auto png = std::make_shared<png::image<png::rgb_pixel_16>>(width, height);
         auto &buf = png->get_pixbuf();
         for (int i = 0; i < width; ++i) {
             for (int j = 0; j < height; ++j) {
