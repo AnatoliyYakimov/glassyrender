@@ -13,18 +13,39 @@
 #include <png_utils.h>
 #include <image.hpp>
 #include <scene_loader.h>
+#include <options_loader.h>
 
 using std::string;
 using std::vector;
 using std::unique_ptr;
 using std::ostream;
 using std::istream;
+using std::exception;
 
 class command {
 protected:
     const string signature = "";
 
     explicit command(string signature) : signature(std::move(signature)) {};
+
+protected:
+    void few_arguments(ostream &os, const string &expected = "") {
+        os << "Too few arguments";
+        if (!expected.empty()) {
+            os << "\nExpected: " << expected;
+        }
+        os.flush();
+    }
+
+    void invalid_argument(ostream &os,
+                          const string &argument,
+                          const string &expected = "") {
+        os << "Invalid argument \"" << argument << "\"\n";
+        if (!expected.empty()) {
+            os << "Expected: " << expected;
+        }
+        os.flush();
+    }
 
 public:
     static unique_ptr<vector<command *>> registry;
@@ -66,32 +87,28 @@ private:
 public:
 
     void exec(const vector<string> &args, ostream &os) override {
-        if (args.size() < 2) {
-            throw std::runtime_error("Too few arguments fro command");
-        }
         auto it = ++args.begin();
-        const string &file_path = *it;
-        string file_name = "test";
-        if (++it != args.end()) {
-            file_name = *it;
-
-        }
-        std::filesystem::path path(file_path);
+        std::filesystem::path path(*it);
         if (path.empty()) {
             path.assign(".");
         }
-        png::image<png::rgb_pixel_16> *png = nullptr;
-        try {
-            auto img = render::get_instance().render_image();
-            png = png_utils::to_16bit(img);
-            png->write(file_name + ".png");
-            os << "Done!";
-            os.flush();
-        } catch (std::exception &e) {
-            delete png;
-            throw e;
+        string file_name = "test";
+        if (++it != args.end()) {
+            file_name = *it;
         }
-        delete png;
+
+        auto path_str = (path / (file_name + ".png")).string();
+        auto img = render::get_instance().render_image();
+        auto png = png_utils::to_16bit(img);
+        try {
+            png->write(path_str);
+        } catch (exception &e) {
+            std::stringstream str;
+            str << "Error while saving image. Details:\n\t" << e.what();
+            throw std::runtime_error(str.str());
+        }
+        os << "Rendering done. Result saved as \"" << path_str << "\"";
+        os.flush();
     }
 
     ~render_command() override = default;
@@ -109,14 +126,46 @@ public:
 
     void exec(const vector<string> &args, ostream &os) override {
         if (args.size() < 2) {
-            throw std::runtime_error("Too few arguments fro command");
+            few_arguments(os, R"("load" or "clear")");
+            return;
         }
         auto it = ++args.begin();
-        const string &file_path = *it;
-        scene_loader::load(file_path);
-        os << "Done!";
-        os.flush();
+        if (*it == "clear") {
+            scene::get_instance().objects.clear();
+            scene::get_instance().lights.clear();
+            os << "Scene cleared successfully";
+        } else if (*it == "load") {
+            if (++it == args.end()) {
+                few_arguments(os, "path to .yaml file");
+                return;
+            }
+            const string &file_path = *it;
+            scene_loader::load(file_path);
+            os << "Scene loaded successfully";
+        } else {
+            invalid_argument(os, *it, R"("load" or "clear")");
+        }
+    }
+};
 
+class load_options_command : public command {
+private:
+    static bool _init;
+
+    static bool _static_init() noexcept;
+
+    explicit load_options_command(const string &signature) : command(signature) {}
+
+public:
+
+    void exec(const vector<string> &args, ostream &os) override {
+        if (args.size() < 2) {
+            few_arguments(os, R"(path to .yaml file)");
+            return;
+        }
+        auto it = ++args.begin();
+        options_loader::load(*it);
+        os << "Options loaded successfully";
     }
 };
 

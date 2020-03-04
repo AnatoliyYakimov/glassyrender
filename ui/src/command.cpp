@@ -28,3 +28,10 @@ bool load_scene_command::_static_init() noexcept {
 }
 
 bool load_scene_command::_init = load_scene_command::_static_init();
+
+bool load_options_command::_init = load_options_command::_static_init();
+
+bool load_options_command::_static_init() noexcept {
+    command::registry->push_back(new load_options_command("options"));
+    return false;
+}
