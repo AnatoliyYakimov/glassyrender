@@ -4,7 +4,7 @@
 #define GLASSYRENDER_SCENE_LOADER_H
 
 using std::string;
-using std::filesystem::path;
+//using std::filesystem::path;
 
 #include <yaml-cpp/yaml.h>
 #include <basic_image.h>
@@ -12,7 +12,7 @@ using std::filesystem::path;
 #include <objects/obj_file_handler.h>
 #include <tga_utils.h>
 
-using std::filesystem::path;
+//using std::filesystem::path;
 
 class scene_loader {
 public:
@@ -21,15 +21,15 @@ public:
         if (str.empty()) {
             throw std::invalid_argument("Path cannot be empty");
         }
-        auto p = path(str).string();
+//        auto p = path(str).string();
         try {
             const YAML::Node node = YAML::LoadFile(str);
 
 
             std::map<string, material_sp> materials;
             std::map<string, affine_transform> transforms;
-            auto prefix =
-                    std::filesystem::path(str).parent_path().string() + "\\";
+            auto prefix = "prefix";
+//                    std::filesystem::path(str).parent_path().string() + "\\";
 
             if (node["materials"].IsDefined()){
                 load_materials(node["materials"], materials, prefix);
@@ -78,7 +78,8 @@ private:
                 float radius = node["radius"].as<float>();
                 obj.reset(new sphere(radius, mat));
             } else if (type == "polygonal") {
-                string path_str = get_path(node["path"].as<string>(), prefix);
+                string path_str = "path";
+//                        get_path(node["path"].as<string>(), prefix);
                 obj = std::move(obj_file_handler::load(path_str));
                 obj->set_material(mat);
             }
@@ -131,23 +132,24 @@ private:
             auto sp = std::make_shared<uniform_texture<T>>(value);
             return sp;
         } else {
-            string path_str = get_path(node["path"].as<string>(), prefix);
+            string path_str = "path";
+//                    get_path(node["path"].as<string>(), prefix);
             basic_image<T> img = tga_utils<T>::load(path_str);
             auto sp = std::make_shared<basic_texture<T>>(std::move(img));
             return sp;
         }
     }
 
-    static string get_path(const string &str, const string &prefix) {
-        auto p = path(str);
-        string path_str;
-        if (p.is_relative()) {
-            path_str = prefix + p.string();
-        } else {
-            path_str = p.string();
-        }
-        return path_str;
-    }
+//    static string get_path(const string &str, const string &prefix) {
+//        auto p = path(str);
+//        string path_str;
+//        if (p.is_relative()) {
+//            path_str = prefix + p.string();
+//        } else {
+//            path_str = p.string();
+//        }
+//        return path_str;
+//    }
 };
 
 namespace YAML {

@@ -3,8 +3,9 @@
 //
 
 #include <objects/obj_file_handler.h>
-#include <boost/algorithm/string.hpp>
+#include <split.h>
 #include <fstream>
+#include <sstream>
 
 shared_ptr<polygonal_object> obj_file_handler::load(const std::string &file_path) {
     std::ifstream is(file_path);
@@ -22,11 +23,11 @@ shared_ptr<polygonal_object> obj_file_handler::load(const std::string &file_path
 
     char* str = new char[128];
     vector<string> strs(5);
+
     while (!is.eof()) {
 
         is.getline(str, 128, '\n');
-
-        boost::split(strs, str, boost::is_any_of(" "));
+        split(str, strs.begin(), ' ');
         const string &header = strs[0];
         if (header == "v") {
             vertices.push_back(parse_v_vertex(strs));
@@ -99,7 +100,7 @@ void obj_file_handler::parse_face_internal(const vector<string> &strs, vector<fa
     }
     vector<string> face_splited(3);
     for (int i = 0; it < strs.end(); ++i, ++it) {
-        boost::algorithm::split(face_splited, *it, boost::is_any_of("/"));
+        split(*it, face_splited.begin(), '/');
         f.v[i] = stoi(face_splited[0]);
         f.vt[i] = !face_splited[1].empty() ? stoi(face_splited[1]) : 0;
         f.vn[i] = !face_splited[2].empty() ? stoi(face_splited[2]) : 0;

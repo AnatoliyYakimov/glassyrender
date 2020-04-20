@@ -16,7 +16,7 @@ scene &scene::get_instance() {
 
 
 
-boost::optional<pair<obj_sp, intersection>>
+optional<pair<obj_sp, intersection>>
     scene::nearest_collision(const vec3f &fromPoint, const vec3f &V, float t_min, float t_max) const {
     std::vector<pair<obj_sp, intersection>> intersections;
     for (const auto &object : objects) {
@@ -27,7 +27,7 @@ boost::optional<pair<obj_sp, intersection>>
         intersections.emplace_back(object, *is);
     }
     if (intersections.empty()) {
-        return boost::none;
+        return std::nullopt;
     }
     pair<obj_sp, intersection> *nearest = intersections.begin().base();
     float d_min = nearest->second.distance;

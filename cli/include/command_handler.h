@@ -5,8 +5,8 @@
 
 #include <ostream>
 #include <iostream>
-#include <boost/algorithm/string.hpp>
 #include <command.h>
+#include <split.h>
 
 using std::istream;
 using std::ostream;
@@ -24,13 +24,12 @@ public:
     void loop() {
         char input[512];
         vector<string> args;
-        const auto predicate = boost::is_any_of(" \t\n");
         const unique_ptr<commands> &cmds = command::registry;
         while (true) {
             os << "\n$:> ";
             os.flush();
             is.getline(input, 512, '\n');
-            boost::algorithm::split(args, input, predicate);
+            split(input, args.begin(), ' ');
             const string &signature = *args.begin();
             for (command *cmd : *cmds) {
                 if (cmd->is_signature(signature)) {

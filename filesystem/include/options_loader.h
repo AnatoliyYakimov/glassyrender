@@ -11,7 +11,8 @@ public:
         if (str.empty()) {
             throw std::invalid_argument("Path cannot be empty");
         }
-        auto p = path(str).string();
+        auto p = "path";
+//                path(str).string();
         try {
             const YAML::Node node = YAML::LoadFile(str);
             auto &opts = render_options::get_instance();

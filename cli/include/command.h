@@ -7,7 +7,7 @@
 #include <vector>
 #include <string>
 #include <memory>
-#include <filesystem>
+//#include <filesystem>
 #include <basic_image.h>
 #include <render.h>
 #include <png_utils.h>
@@ -88,16 +88,17 @@ public:
 
     void exec(const vector<string> &args, ostream &os) override {
         auto it = ++args.begin();
-        std::filesystem::path path(*it);
-        if (path.empty()) {
-            path.assign(".");
-        }
+//        std::filesystem::path path(*it);
+//        if (path.empty()) {
+//            path.assign(".");
+//        }
         string file_name = "test";
         if (++it != args.end()) {
             file_name = *it;
         }
 
-        auto path_str = (path / (file_name + ".png")).string();
+        auto path_str = "path";
+                //(path / (file_name + ".png")).string();
         auto img = render::get_instance().render_image();
         auto png = png_utils::to_16bit(img);
         try {

@@ -3,6 +3,8 @@
 #ifndef GLASSYRENDER_RENDER_OPTIONS_H
 #define GLASSYRENDER_RENDER_OPTIONS_H
 
+#include <singleton.h>
+
 class render_options : public singleton {
 public:
     static render_options &get_instance() {

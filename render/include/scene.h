@@ -10,11 +10,11 @@
 #include <objects/i_object.h>
 #include <objects/light.h>
 #include <singleton.h>
-#include <boost/optional.hpp>
+#include <optional>
 
 using std::shared_ptr;
 using std::pair;
-using boost::optional;
+using std::optional;
 
 typedef std::vector<obj_sp> objects_arr;
 typedef std::vector<light_sp> lights_arr;
